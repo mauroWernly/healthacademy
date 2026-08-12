@@ -1,16 +1,34 @@
 import { prisma } from "@/server/db";
+import { auth } from "@/server/auth/config";
+import { can } from "@/server/auth/permissions";
 import { getCachedStudentSummary } from "../data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { saveGradeAction } from "./actions";
 
 export default async function NotasPage({ params }: { params: Promise<{ studentId: string }> }) {
   const { studentId } = await params;
+  const session = await auth();
   const summary = await getCachedStudentSummary(studentId);
+  const canWrite = can(session!.user.permissions, "grade:write");
 
   const grades = await prisma.grade.findMany({
     where: { studentId, deletedAt: null },
     include: { evaluation: { include: { template: true, subjectOffering: { include: { subject: true } } } } },
     orderBy: [{ evaluation: { subjectOffering: { subject: { name: "asc" } } } }, { evaluation: { template: { order: "asc" } } }],
+  });
+  const gradeByTemplate = new Map(grades.map((g) => [`${g.evaluation.subjectOfferingId}:${g.evaluation.templateId}`, g]));
+
+  const currentEnrollments = await prisma.subjectEnrollment.findMany({
+    where: { studentId, status: "CURSANDO" },
+    include: {
+      subjectOffering: {
+        include: {
+          subject: { include: { evaluationTemplates: { orderBy: { order: "asc" } } } },
+        },
+      },
+    },
   });
 
   return (
@@ -48,6 +66,78 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
           </CardContent>
         </Card>
       ))}
+
+      {currentEnrollments.map((enrollment) => {
+        const offering = enrollment.subjectOffering;
+        return (
+          <Card key={offering.id}>
+            <CardHeader>
+              <CardTitle>Cargar notas — {offering.subject.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="text-xs uppercase tracking-wide text-slate-500">
+                  <tr>
+                    <th className="py-2 pr-4">Evaluación</th>
+                    <th className="py-2 pr-4">Nota actual</th>
+                    {canWrite && <th className="py-2 pr-4">Cargar / corregir</th>}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {offering.subject.evaluationTemplates.map((template) => {
+                    const grade = gradeByTemplate.get(`${offering.id}:${template.id}`);
+                    return (
+                      <tr key={template.id}>
+                        <td className="py-2 pr-4 text-slate-900">
+                          {template.name}
+                          {template.retakeOfId && <span className="ml-1 text-xs text-slate-400">(recuperatorio)</span>}
+                        </td>
+                        <td className="py-2 pr-4 font-medium">{grade?.score?.toString() ?? "—"}</td>
+                        {canWrite && (
+                          <td className="py-2 pr-4">
+                            <form action={saveGradeAction} className="flex flex-wrap items-center gap-2">
+                              <input type="hidden" name="studentId" value={studentId} />
+                              <input type="hidden" name="subjectOfferingId" value={offering.id} />
+                              <input type="hidden" name="templateId" value={template.id} />
+                              <input
+                                type="number"
+                                name="score"
+                                min={0}
+                                max={10}
+                                step="0.01"
+                                defaultValue={grade?.score?.toString() ?? ""}
+                                placeholder="0-10"
+                                className="w-20 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                              />
+                              <input
+                                type="text"
+                                name="observations"
+                                defaultValue={grade?.observations ?? ""}
+                                placeholder="Observaciones"
+                                className="w-36 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                              />
+                              <Button type="submit" size="sm" variant="outline">
+                                Guardar
+                              </Button>
+                            </form>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                  {offering.subject.evaluationTemplates.length === 0 && (
+                    <tr>
+                      <td colSpan={canWrite ? 3 : 2} className="py-4 text-center text-slate-500">
+                        Esta materia no tiene evaluaciones definidas.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        );
+      })}
 
       <Card>
         <CardHeader>

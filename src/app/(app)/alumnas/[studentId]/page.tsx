@@ -1,11 +1,31 @@
 import { getCachedStudentSummary } from "./data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { auth } from "@/server/auth/config";
+import { can } from "@/server/auth/permissions";
+import { updateAcademicStatusAction, createSuspensionAction, liftSuspensionAction } from "./actions";
+
+const ACADEMIC_STATUS_OPTIONS = [
+  "PREINSCRIPTA",
+  "INSCRIPTA",
+  "ACTIVA",
+  "REGULAR",
+  "CONDICIONAL",
+  "EGRESADA",
+  "SUSPENDIDA",
+  "BAJA",
+  "INACTIVA",
+] as const;
 
 export default async function StudentSummaryPage({ params }: { params: Promise<{ studentId: string }> }) {
   const { studentId } = await params;
+  const session = await auth();
   const summary = await getCachedStudentSummary(studentId);
+  const { student } = summary;
+  const canWriteStudent = can(session!.user.permissions, "student:write");
+  const canWriteSuspension = can(session!.user.permissions, "suspension:write");
 
   const nextTuition = summary.tuitions.find((t) => !t.payment || t.payment.status !== "CONFIRMADO");
   const lastPaidTuition = [...summary.tuitions].reverse().find((t) => t.payment?.status === "CONFIRMADO");
@@ -30,6 +50,22 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
             Asistencia general: <span className="font-medium">{summary.overallAttendance.percentage.toFixed(0)}%</span>{" "}
             ({summary.overallAttendance.present}/{summary.overallAttendance.totalClasses} clases)
           </p>
+          {canWriteStudent && (
+            <form action={updateAcademicStatusAction} className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+              <input type="hidden" name="studentId" value={studentId} />
+              <label className="text-xs uppercase tracking-wide text-slate-500">Estado académico</label>
+              <select name="academicStatus" defaultValue={student.academicStatus} className="rounded-md border border-slate-300 px-2 py-1 text-xs">
+                {ACADEMIC_STATUS_OPTIONS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+              <Button type="submit" size="sm" variant="outline">
+                Guardar
+              </Button>
+            </form>
+          )}
         </CardContent>
       </Card>
 
@@ -73,6 +109,41 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
           <CardContent className="text-sm text-slate-700">
             <p>{summary.activeSuspension.reason}</p>
             <p className="mt-1 text-slate-500">Desde {formatDate(summary.activeSuspension.startDate)}</p>
+            {canWriteSuspension && (
+              <form action={liftSuspensionAction} className="mt-3">
+                <input type="hidden" name="studentId" value={studentId} />
+                <input type="hidden" name="suspensionId" value={summary.activeSuspension.id} />
+                <Button type="submit" size="sm" variant="outline">
+                  Levantar suspensión
+                </Button>
+              </form>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {!summary.activeSuspension && canWriteSuspension && (
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Suspender alumna</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={createSuspensionAction} className="flex flex-wrap items-end gap-2">
+              <input type="hidden" name="studentId" value={studentId} />
+              <div className="flex flex-col gap-1">
+                <label className="text-xs uppercase tracking-wide text-slate-500">Motivo</label>
+                <input
+                  type="text"
+                  name="reason"
+                  required
+                  placeholder="Motivo de la suspensión"
+                  className="w-64 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                />
+              </div>
+              <Button type="submit" size="sm" variant="destructive">
+                Suspender
+              </Button>
+            </form>
           </CardContent>
         </Card>
       )}
