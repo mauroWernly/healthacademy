@@ -2,11 +2,11 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const TONE_CLASSES = {
-  green: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+  green: "bg-emerald-50 text-emerald-800 ring-emerald-700/20",
   yellow: "bg-amber-50 text-amber-800 ring-amber-600/20",
-  red: "bg-red-50 text-red-700 ring-red-600/20",
-  blue: "bg-blue-50 text-blue-700 ring-blue-600/20",
-  gray: "bg-slate-100 text-slate-700 ring-slate-500/20",
+  red: "bg-red-50 text-red-800 ring-red-700/20",
+  blue: "bg-blue-50 text-blue-800 ring-blue-700/20",
+  gray: "bg-stone-100 text-stone-700 ring-stone-500/20",
 } as const;
 
 export type BadgeTone = keyof typeof TONE_CLASSES;

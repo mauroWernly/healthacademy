@@ -13,8 +13,8 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500">Centro de control administrativo — problemas, alertas y acción.</p>
+        <h1 className="font-serif text-2xl font-medium tracking-tight text-stone-900">Dashboard</h1>
+        <p className="text-sm text-stone-500">Centro de control administrativo — problemas, alertas y acción.</p>
       </div>
 
       {data.alerts.length > 0 && (
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
               <Link
                 key={i}
                 href={alert.href}
-                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-stone-700 hover:bg-stone-50"
               >
                 <span>{ALERT_ICON[alert.level]}</span>
                 <span>{alert.message}</span>
@@ -42,8 +42,8 @@ export default async function DashboardPage() {
           <Link key={indicator.label} href={indicator.href}>
             <Card className="h-full transition-shadow hover:shadow-md">
               <CardContent className="py-5">
-                <p className="text-3xl font-semibold text-slate-900">{indicator.value}</p>
-                <p className="mt-1 text-sm text-slate-500">{indicator.label}</p>
+                <p className="text-3xl font-semibold text-stone-900">{indicator.value}</p>
+                <p className="mt-1 text-sm text-stone-500">{indicator.label}</p>
               </CardContent>
             </Card>
           </Link>

@@ -22,8 +22,8 @@ export function SidebarNav({ items }: { items: SidebarNavItem[] }) {
             href={item.href}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              isActive ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              "block rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              isActive ? "bg-accent text-accent-foreground" : "text-foreground/70 hover:bg-foreground/[0.06] hover:text-foreground"
             )}
           >
             {item.label}

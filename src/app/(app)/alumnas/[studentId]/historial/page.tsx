@@ -25,11 +25,11 @@ export default async function HistorialPage({ params }: { params: Promise<{ stud
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         {logs.length === 0 ? (
-          <p className="text-slate-500">No hay eventos de auditoría registrados para esta alumna todavía.</p>
+          <p className="text-stone-500">No hay eventos de auditoría registrados para esta alumna todavía.</p>
         ) : (
           logs.map((log) => (
-            <div key={log.id} className="rounded-md border border-slate-200 px-3 py-2">
-              <p className="text-slate-900">
+            <div key={log.id} className="rounded-md border border-stone-200 px-3 py-2">
+              <p className="text-stone-900">
                 {new Intl.DateTimeFormat("es-AR", { dateStyle: "short", timeStyle: "short" }).format(log.createdAt)} —{" "}
                 <span className="font-medium">{log.user?.name ?? "Sistema"}</span> — {log.action} {log.entity}
               </p>

@@ -52,10 +52,10 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
         </CardHeader>
         <CardContent className="overflow-x-auto">
           {assignments.length === 0 ? (
-            <p className="text-sm text-slate-500">Esta alumna no tiene trabajos prácticos registrados.</p>
+            <p className="text-sm text-stone-500">Esta alumna no tiene trabajos prácticos registrados.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-slate-500">
+              <thead className="text-xs uppercase tracking-wide text-stone-500">
                 <tr>
                   <th className="py-2 pr-4">Materia</th>
                   <th className="py-2 pr-4">Trabajo</th>
@@ -65,13 +65,13 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
                   {canWrite && <th className="py-2 pr-4">Actualizar</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-stone-100">
                 {assignments.map((a) => (
                   <tr key={a.id}>
-                    <td className="py-2 pr-4 text-slate-900">{a.template.subjectOffering.subject.name}</td>
-                    <td className="py-2 pr-4 text-slate-600">{a.template.name}</td>
-                    <td className="py-2 pr-4 text-slate-600">{a.template.dueDate ? formatDate(a.template.dueDate) : "—"}</td>
-                    <td className="py-2 pr-4 text-slate-600">{a.submittedAt ? formatDate(a.submittedAt) : "—"}</td>
+                    <td className="py-2 pr-4 text-stone-900">{a.template.subjectOffering.subject.name}</td>
+                    <td className="py-2 pr-4 text-stone-600">{a.template.name}</td>
+                    <td className="py-2 pr-4 text-stone-600">{a.template.dueDate ? formatDate(a.template.dueDate) : "—"}</td>
+                    <td className="py-2 pr-4 text-stone-600">{a.submittedAt ? formatDate(a.submittedAt) : "—"}</td>
                     <td className="py-2 pr-4">
                       <Badge tone={STATUS_TONE[a.status]}>{a.status}</Badge>
                     </td>
@@ -80,7 +80,7 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
                         <form action={updateAssignmentAction} className="flex flex-wrap items-center gap-2">
                           <input type="hidden" name="studentId" value={studentId} />
                           <input type="hidden" name="assignmentId" value={a.id} />
-                          <select name="status" defaultValue={a.status} className="rounded-md border border-slate-300 px-2 py-1 text-xs">
+                          <select name="status" defaultValue={a.status} className="rounded-md border border-stone-300 px-2 py-1 text-xs">
                             {STATUS_OPTIONS.map((s) => (
                               <option key={s} value={s}>
                                 {s}
@@ -91,7 +91,7 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
                             type="date"
                             name="submittedAt"
                             defaultValue={a.submittedAt ? new Date(a.submittedAt).toISOString().slice(0, 10) : ""}
-                            className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                            className="rounded-md border border-stone-300 px-2 py-1 text-xs"
                           />
                           <Button type="submit" size="sm" variant="outline">
                             Guardar
@@ -114,7 +114,7 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
           </CardHeader>
           <CardContent>
             {availableTemplates.length === 0 ? (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-stone-500">
                 No hay trabajos prácticos disponibles para agregar (todas las materias en curso ya tienen sus trabajos asignados, o
                 no definen trabajos prácticos).
               </p>
@@ -122,8 +122,8 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
               <form action={addAssignmentAction} className="flex flex-wrap items-end gap-2">
                 <input type="hidden" name="studentId" value={studentId} />
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs uppercase tracking-wide text-slate-500">Trabajo práctico</label>
-                  <select name="templateId" required className="rounded-md border border-slate-300 px-2 py-1.5 text-sm">
+                  <label className="text-xs uppercase tracking-wide text-stone-500">Trabajo práctico</label>
+                  <select name="templateId" required className="rounded-md border border-stone-300 px-2 py-1.5 text-sm">
                     {availableTemplates.map((t) => (
                       <option key={t.id} value={t.id}>
                         {t.subjectName} — {t.name}

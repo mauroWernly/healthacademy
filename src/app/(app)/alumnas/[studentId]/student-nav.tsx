@@ -23,7 +23,7 @@ export function StudentNav({ studentId }: { studentId: string }) {
   const basePath = `/alumnas/${studentId}`;
 
   return (
-    <nav className="flex flex-wrap gap-1 border-b border-slate-200">
+    <nav className="flex flex-wrap gap-1 border-b border-border">
       {TABS.map((tab) => {
         const href = `${basePath}${tab.href}`;
         const isActive = tab.href === "" ? pathname === basePath : pathname === href || pathname.startsWith(`${href}/`);
@@ -35,8 +35,8 @@ export function StudentNav({ studentId }: { studentId: string }) {
             className={cn(
               "-mb-px rounded-t-md px-3 py-2 text-sm font-medium transition-colors",
               isActive
-                ? "border-b-2 border-slate-900 text-slate-900"
-                : "border-b-2 border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "border-b-2 border-accent text-accent"
+                : "border-b-2 border-transparent text-foreground/60 hover:bg-foreground/[0.04] hover:text-foreground"
             )}
           >
             {tab.label}

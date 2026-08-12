@@ -47,8 +47,8 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Control de cuotas</h1>
-        <p className="text-sm text-slate-500">Cuotas impagas — {rows.length} resultado{rows.length === 1 ? "" : "s"}</p>
+        <h1 className="font-serif text-2xl font-medium tracking-tight text-stone-900">Control de cuotas</h1>
+        <p className="text-sm text-stone-500">Cuotas impagas — {rows.length} resultado{rows.length === 1 ? "" : "s"}</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -56,7 +56,7 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
           <Link
             key={f.key}
             href={{ pathname: "/pagos", query: { filtro: f.key } }}
-            className={`rounded-full px-3 py-1 text-sm ${filtro === f.key ? "bg-slate-900 text-white" : "bg-white text-slate-600 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"}`}
+            className={`rounded-full px-3 py-1 text-sm ${filtro === f.key ? "bg-accent text-accent-foreground" : "bg-surface text-stone-600 ring-1 ring-inset ring-stone-200 hover:bg-stone-50"}`}
           >
             {f.label}
           </Link>
@@ -66,7 +66,7 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
               <tr>
                 <th className="px-4 py-2.5">Alumna</th>
                 <th className="px-4 py-2.5">DNI</th>
@@ -81,19 +81,19 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
                 <th className="px-4 py-2.5"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {rows.map(({ tuition: t, computed, daysLate }) => (
-                <tr key={t.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-2.5 font-medium text-slate-900">
+                <tr key={t.id} className="hover:bg-stone-50">
+                  <td className="px-4 py-2.5 font-medium text-stone-900">
                     {t.student.lastName}, {t.student.firstName}
                   </td>
-                  <td className="px-4 py-2.5 text-slate-600">{t.student.dni}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{t.student.fileNumber}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{t.period}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{formatDate(t.dueDate)}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{daysLate > 0 ? daysLate : "—"}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{formatCurrency(t.amount.toNumber())}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{t.student.dni}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{t.student.fileNumber}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{t.period}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{formatDate(t.dueDate)}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{daysLate > 0 ? daysLate : "—"}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{formatCurrency(t.amount.toNumber())}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
                   <td className="px-4 py-2.5 font-medium">{formatCurrency(computed.total)}</td>
                   <td className="px-4 py-2.5">
                     <Badge tone={computed.isCritical ? "red" : computed.status === "CON_RECARGO" ? "yellow" : "blue"}>
@@ -101,7 +101,7 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
                     </Badge>
                   </td>
                   <td className="px-4 py-2.5 text-right">
-                    <Link href={`/alumnas/${t.studentId}/pagos`} className="text-sm font-medium text-slate-900 hover:underline">
+                    <Link href={`/alumnas/${t.studentId}/pagos`} className="text-sm font-medium text-stone-900 hover:underline">
                       Registrar pago
                     </Link>
                   </td>
@@ -109,7 +109,7 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
               ))}
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={11} className="px-4 py-10 text-center text-sm text-slate-500">
+                  <td colSpan={11} className="px-4 py-10 text-center text-sm text-stone-500">
                     No hay cuotas que coincidan con este filtro.
                   </td>
                 </tr>

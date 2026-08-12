@@ -41,8 +41,8 @@ export default async function ReportesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Reportes</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="font-serif text-2xl font-medium tracking-tight text-stone-900">Reportes</h1>
+        <p className="text-sm text-stone-500">
           Exportación a CSV/Excel y PDF planificada — por ahora cada reporte abre el listado filtrado correspondiente.
         </p>
       </div>
@@ -53,7 +53,7 @@ export default async function ReportesPage() {
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {reportLinks.map((r) => (
-            <Link key={r.href} href={r.href} className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
+            <Link key={r.href} href={r.href} className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">
               {r.label}
             </Link>
           ))}
@@ -66,11 +66,11 @@ export default async function ReportesPage() {
         </CardHeader>
         <CardContent>
           <table className="w-full text-left text-sm">
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {byAcademicStatus.map((row) => (
                 <tr key={row.academicStatus}>
-                  <td className="py-1.5 pr-4 text-slate-700">{row.academicStatus}</td>
-                  <td className="py-1.5 font-medium text-slate-900">{row._count}</td>
+                  <td className="py-1.5 pr-4 text-stone-700">{row.academicStatus}</td>
+                  <td className="py-1.5 font-medium text-stone-900">{row._count}</td>
                 </tr>
               ))}
             </tbody>
@@ -84,12 +84,12 @@ export default async function ReportesPage() {
         </CardHeader>
         <CardContent>
           <table className="w-full text-left text-sm">
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {paymentsByMethod.map((row) => (
                 <tr key={row.methodId}>
-                  <td className="py-1.5 pr-4 text-slate-700">{methodName.get(row.methodId) ?? row.methodId}</td>
-                  <td className="py-1.5 pr-4 text-slate-500">{row._count} pagos</td>
-                  <td className="py-1.5 font-medium text-slate-900">{formatCurrency(row._sum.amountPaid?.toNumber() ?? 0)}</td>
+                  <td className="py-1.5 pr-4 text-stone-700">{methodName.get(row.methodId) ?? row.methodId}</td>
+                  <td className="py-1.5 pr-4 text-stone-500">{row._count} pagos</td>
+                  <td className="py-1.5 font-medium text-stone-900">{formatCurrency(row._sum.amountPaid?.toNumber() ?? 0)}</td>
                 </tr>
               ))}
             </tbody>

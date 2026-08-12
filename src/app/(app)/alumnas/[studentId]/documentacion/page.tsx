@@ -29,7 +29,7 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-slate-500">
+          <thead className="text-xs uppercase tracking-wide text-stone-500">
             <tr>
               <th className="py-2 pr-4">Documento</th>
               <th className="py-2 pr-4">Estado</th>
@@ -39,16 +39,16 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
               {canWrite && <th className="py-2 pr-4">Actualizar</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-stone-100">
             {student.documents.map((doc) => (
               <tr key={doc.id}>
-                <td className="py-2 pr-4 font-medium text-slate-900">{doc.documentType.name}</td>
+                <td className="py-2 pr-4 font-medium text-stone-900">{doc.documentType.name}</td>
                 <td className="py-2 pr-4">
                   <Badge tone={STATUS_TONE[doc.status]}>{doc.status}</Badge>
                 </td>
-                <td className="py-2 pr-4 text-slate-600">{doc.uploadedAt ? formatDate(doc.uploadedAt) : "—"}</td>
-                <td className="py-2 pr-4 text-slate-600">{doc.validatedAt ? formatDate(doc.validatedAt) : "—"}</td>
-                <td className="py-2 pr-4 text-slate-600">{doc.observations ?? "—"}</td>
+                <td className="py-2 pr-4 text-stone-600">{doc.uploadedAt ? formatDate(doc.uploadedAt) : "—"}</td>
+                <td className="py-2 pr-4 text-stone-600">{doc.validatedAt ? formatDate(doc.validatedAt) : "—"}</td>
+                <td className="py-2 pr-4 text-stone-600">{doc.observations ?? "—"}</td>
                 {canWrite && (
                   <td className="py-2 pr-4">
                     <form action={updateDocumentStatusAction} className="flex flex-wrap items-center gap-2">
@@ -58,7 +58,7 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
                         name="status"
                         defaultValue={doc.status}
                         required
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-stone-300 px-2 py-1 text-xs"
                       >
                         {STATUS_OPTIONS.map((s) => (
                           <option key={s} value={s}>
@@ -71,7 +71,7 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
                         name="observations"
                         defaultValue={doc.observations ?? ""}
                         placeholder="Observaciones"
-                        className="w-40 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="w-40 rounded-md border border-stone-300 px-2 py-1 text-xs"
                       />
                       <Button type="submit" size="sm" variant="outline">
                         Guardar

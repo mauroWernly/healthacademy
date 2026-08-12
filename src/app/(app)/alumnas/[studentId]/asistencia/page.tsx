@@ -61,10 +61,10 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
         </CardHeader>
         <CardContent className="overflow-x-auto">
           {summaryRows.length === 0 ? (
-            <p className="text-sm text-slate-500">No existen clases registradas para esta alumna todavía.</p>
+            <p className="text-sm text-stone-500">No existen clases registradas para esta alumna todavía.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-slate-500">
+              <thead className="text-xs uppercase tracking-wide text-stone-500">
                 <tr>
                   <th className="py-2 pr-4">Materia</th>
                   <th className="py-2 pr-4">Clases registradas</th>
@@ -74,14 +74,14 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                   <th className="py-2 pr-4">%</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-stone-100">
                 {summaryRows.map((row) => (
                   <tr key={row.id}>
-                    <td className="py-2 pr-4 font-medium text-slate-900">{row.subjectName}</td>
-                    <td className="py-2 pr-4 text-slate-600">{row.summary.totalClasses}</td>
-                    <td className="py-2 pr-4 text-slate-600">{row.summary.present}</td>
-                    <td className="py-2 pr-4 text-slate-600">{row.summary.absent}</td>
-                    <td className="py-2 pr-4 text-slate-600">{row.summary.justified}</td>
+                    <td className="py-2 pr-4 font-medium text-stone-900">{row.subjectName}</td>
+                    <td className="py-2 pr-4 text-stone-600">{row.summary.totalClasses}</td>
+                    <td className="py-2 pr-4 text-stone-600">{row.summary.present}</td>
+                    <td className="py-2 pr-4 text-stone-600">{row.summary.absent}</td>
+                    <td className="py-2 pr-4 text-stone-600">{row.summary.justified}</td>
                     <td className="py-2 pr-4">
                       <AttendanceBadge percentage={row.summary.percentage} minimum={config.minAttendancePercent} />
                     </td>
@@ -94,7 +94,7 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
       </Card>
 
       {currentEnrollments.length === 0 ? (
-        <p className="text-sm text-slate-500">Esta alumna no tiene materias en curso actualmente.</p>
+        <p className="text-sm text-stone-500">Esta alumna no tiene materias en curso actualmente.</p>
       ) : (
         currentEnrollments.map((enrollment) => {
           const offering = enrollment.subjectOffering;
@@ -105,7 +105,7 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
               </CardHeader>
               <CardContent className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="text-xs uppercase tracking-wide text-slate-500">
+                  <thead className="text-xs uppercase tracking-wide text-stone-500">
                     <tr>
                       <th className="py-2 pr-4">Clase</th>
                       <th className="py-2 pr-4">Estado</th>
@@ -113,16 +113,16 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                       {canWrite && <th className="py-2 pr-4">Acreditar / corregir</th>}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-stone-100">
                     {offering.classSessions.map((cs) => {
                       const record = attendanceByClassSession.get(cs.id);
                       return (
                         <tr key={cs.id}>
-                          <td className="py-2 pr-4 text-slate-900">{formatDate(cs.date)}</td>
+                          <td className="py-2 pr-4 text-stone-900">{formatDate(cs.date)}</td>
                           <td className="py-2 pr-4">
                             {record ? <Badge tone={STATUS_TONE[record.status]}>{record.status}</Badge> : <Badge tone="gray">SIN REGISTRO</Badge>}
                           </td>
-                          <td className="py-2 pr-4 text-slate-600">{record?.observations ?? "—"}</td>
+                          <td className="py-2 pr-4 text-stone-600">{record?.observations ?? "—"}</td>
                           {canWrite && (
                             <td className="py-2 pr-4">
                               <form action={recordAttendanceAction} className="flex flex-wrap items-center gap-2">
@@ -133,7 +133,7 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                                   name="status"
                                   defaultValue={record?.status ?? "PRESENTE"}
                                   required
-                                  className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                                  className="rounded-md border border-stone-300 px-2 py-1 text-xs"
                                 >
                                   {STATUS_OPTIONS.map((s) => (
                                     <option key={s} value={s}>
@@ -146,7 +146,7 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                                   name="observations"
                                   defaultValue={record?.observations ?? ""}
                                   placeholder="Observaciones"
-                                  className="w-36 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                                  className="w-36 rounded-md border border-stone-300 px-2 py-1 text-xs"
                                 />
                                 <Button type="submit" size="sm" variant="outline">
                                   Guardar
@@ -159,7 +159,7 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                     })}
                     {offering.classSessions.length === 0 && (
                       <tr>
-                        <td colSpan={canWrite ? 4 : 3} className="py-4 text-center text-slate-500">
+                        <td colSpan={canWrite ? 4 : 3} className="py-4 text-center text-stone-500">
                           Todavía no hay clases registradas para esta materia.
                         </td>
                       </tr>
@@ -168,21 +168,21 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                 </table>
 
                 {canWrite && (
-                  <form action={recordAttendanceAction} className="mt-4 flex flex-wrap items-end gap-2 border-t border-slate-100 pt-4">
+                  <form action={recordAttendanceAction} className="mt-4 flex flex-wrap items-end gap-2 border-t border-stone-100 pt-4">
                     <input type="hidden" name="studentId" value={studentId} />
                     <input type="hidden" name="subjectOfferingId" value={offering.id} />
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs uppercase tracking-wide text-slate-500">Nueva clase — fecha</label>
+                      <label className="text-xs uppercase tracking-wide text-stone-500">Nueva clase — fecha</label>
                       <input
                         type="date"
                         name="date"
                         required
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-stone-300 px-2 py-1 text-xs"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs uppercase tracking-wide text-slate-500">Estado</label>
-                      <select name="status" required className="rounded-md border border-slate-300 px-2 py-1 text-xs">
+                      <label className="text-xs uppercase tracking-wide text-stone-500">Estado</label>
+                      <select name="status" required className="rounded-md border border-stone-300 px-2 py-1 text-xs">
                         {STATUS_OPTIONS.map((s) => (
                           <option key={s} value={s}>
                             {s}
@@ -191,12 +191,12 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
                       </select>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs uppercase tracking-wide text-slate-500">Observaciones</label>
+                      <label className="text-xs uppercase tracking-wide text-stone-500">Observaciones</label>
                       <input
                         type="text"
                         name="observations"
                         placeholder="Observaciones"
-                        className="w-36 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="w-36 rounded-md border border-stone-300 px-2 py-1 text-xs"
                       />
                     </div>
                     <Button type="submit" size="sm">

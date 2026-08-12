@@ -34,7 +34,7 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-slate-500">
+          <thead className="text-xs uppercase tracking-wide text-stone-500">
             <tr>
               <th className="py-2 pr-4">Período</th>
               <th className="py-2 pr-4">Vencimiento</th>
@@ -46,7 +46,7 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
               <th className="py-2 pr-4"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-stone-100">
             {tuitions.map((t) => {
               const isPaid = t.payment?.status === "CONFIRMADO";
               const computed = calculateTuitionStatus(
@@ -56,17 +56,17 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
               );
               return (
                 <tr key={t.id}>
-                  <td className="py-2 pr-4 font-medium text-slate-900">{t.period}</td>
-                  <td className="py-2 pr-4 text-slate-600">{formatDate(t.dueDate)}</td>
-                  <td className="py-2 pr-4 text-slate-600">{formatCurrency(t.amount.toNumber())}</td>
-                  <td className="py-2 pr-4 text-slate-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
+                  <td className="py-2 pr-4 font-medium text-stone-900">{t.period}</td>
+                  <td className="py-2 pr-4 text-stone-600">{formatDate(t.dueDate)}</td>
+                  <td className="py-2 pr-4 text-stone-600">{formatCurrency(t.amount.toNumber())}</td>
+                  <td className="py-2 pr-4 text-stone-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
                   <td className="py-2 pr-4 font-medium">{formatCurrency(computed.total)}</td>
                   <td className="py-2 pr-4">
                     <Badge tone={isPaid ? "green" : computed.isCritical ? "red" : computed.status === "CON_RECARGO" ? "yellow" : "blue"}>
                       {isPaid ? "Pagada" : computed.isCritical ? "Crítica" : computed.status}
                     </Badge>
                   </td>
-                  <td className="py-2 pr-4 text-slate-600">
+                  <td className="py-2 pr-4 text-stone-600">
                     {isPaid ? `${t.payment!.method.name} — ${formatDate(t.payment!.paidAt)}` : "—"}
                   </td>
                   <td className="py-2 pr-4">
@@ -74,7 +74,7 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
                       <form action={registerPaymentAction} className="flex items-center gap-2">
                         <input type="hidden" name="tuitionId" value={t.id} />
                         <input type="hidden" name="studentId" value={studentId} />
-                        <select name="methodId" required className="rounded-md border border-slate-300 px-2 py-1 text-xs">
+                        <select name="methodId" required className="rounded-md border border-stone-300 px-2 py-1 text-xs">
                           {methods.map((m) => (
                             <option key={m.id} value={m.id}>
                               {m.name}
@@ -92,7 +92,7 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
             })}
             {tuitions.length === 0 && (
               <tr>
-                <td colSpan={8} className="py-6 text-center text-slate-500">
+                <td colSpan={8} className="py-6 text-center text-stone-500">
                   Esta alumna no tiene cuotas registradas.
                 </td>
               </tr>

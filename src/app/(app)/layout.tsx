@@ -26,28 +26,28 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white md:flex">
-        <div className="border-b border-slate-100 px-5 py-4">
-          <p className="text-sm font-semibold text-slate-900">Instituto Superior de</p>
-          <p className="text-sm font-semibold text-slate-900">Cosmetología Integral</p>
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-surface md:flex">
+        <div className="border-b border-border/70 px-6 py-5">
+          <p className="font-serif text-base font-medium leading-snug text-foreground">Instituto Superior de</p>
+          <p className="font-serif text-base font-medium leading-snug text-foreground">Cosmetología Integral</p>
         </div>
         <SidebarNav items={visibleNav} />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3">
+        <header className="flex items-center justify-between border-b border-border bg-surface px-6 py-3.5">
           <form action="/alumnas" method="GET" className="w-full max-w-sm">
             <input
               type="search"
               name="q"
               placeholder="Buscar por nombre, apellido, DNI o legajo..."
-              className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/40"
             />
           </form>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="text-right text-sm">
-              <p className="font-medium text-slate-900">{session.user.name}</p>
-              <p className="text-xs text-slate-500">{session.user.roleName}</p>
+              <p className="font-medium text-foreground">{session.user.name}</p>
+              <p className="text-xs text-muted">{session.user.roleName}</p>
             </div>
             <form
               action={async () => {
@@ -61,7 +61,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </form>
           </div>
         </header>
-        <main className="flex-1 bg-slate-50 p-6">{children}</main>
+        <main className="flex-1 bg-background p-6 md:p-8">{children}</main>
       </div>
     </div>
   );

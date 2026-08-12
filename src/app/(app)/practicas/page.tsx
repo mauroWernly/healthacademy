@@ -24,13 +24,13 @@ export default async function PracticasIndexPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Prácticas profesionales supervisadas</h1>
-        <p className="text-sm text-slate-500">{internships.length} registro{internships.length === 1 ? "" : "s"}</p>
+        <h1 className="font-serif text-2xl font-medium tracking-tight text-stone-900">Prácticas profesionales supervisadas</h1>
+        <p className="text-sm text-stone-500">{internships.length} registro{internships.length === 1 ? "" : "s"}</p>
       </div>
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
               <tr>
                 <th className="px-4 py-2.5">Alumna</th>
                 <th className="px-4 py-2.5">Lugar</th>
@@ -40,22 +40,22 @@ export default async function PracticasIndexPage() {
                 <th className="px-4 py-2.5"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {internships.map((i) => (
                 <tr key={i.id}>
-                  <td className="px-4 py-2.5 font-medium text-slate-900">
+                  <td className="px-4 py-2.5 font-medium text-stone-900">
                     {i.student.lastName}, {i.student.firstName}
                   </td>
-                  <td className="px-4 py-2.5 text-slate-600">{i.place}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{i.tutor}</td>
-                  <td className="px-4 py-2.5 text-slate-600">
+                  <td className="px-4 py-2.5 text-stone-600">{i.place}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{i.tutor}</td>
+                  <td className="px-4 py-2.5 text-stone-600">
                     {i.completedHours}/{i.requiredHours}
                   </td>
                   <td className="px-4 py-2.5">
                     <Badge tone={STATUS_TONE[i.status]}>{i.status}</Badge>
                   </td>
                   <td className="px-4 py-2.5 text-right">
-                    <Link href={`/alumnas/${i.studentId}/practicas`} className="text-sm font-medium text-slate-900 hover:underline">
+                    <Link href={`/alumnas/${i.studentId}/practicas`} className="text-sm font-medium text-stone-900 hover:underline">
                       Ver legajo
                     </Link>
                   </td>
@@ -63,7 +63,7 @@ export default async function PracticasIndexPage() {
               ))}
               {internships.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-sm text-slate-500">
+                  <td colSpan={6} className="px-4 py-10 text-center text-sm text-stone-500">
                     No hay prácticas registradas todavía.
                   </td>
                 </tr>

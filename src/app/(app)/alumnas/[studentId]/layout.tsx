@@ -19,20 +19,20 @@ export default async function StudentLayout({
 
   return (
     <div className="space-y-4">
-      <Link href="/alumnas" className="text-sm text-slate-500 hover:text-slate-800">
+      <Link href="/alumnas" className="text-sm text-muted transition-colors hover:text-accent">
         ← Volver a Alumnas
       </Link>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-[0_1px_2px_rgba(32,29,26,0.04),0_8px_24px_-16px_rgba(32,29,26,0.12)]">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-lg font-semibold text-slate-900">
+            <h1 className="font-serif text-xl font-medium tracking-tight text-foreground">
               {student.lastName}, {student.firstName}
             </h1>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted">
               DNI {student.dni} · Legajo {student.fileNumber} · {student.career?.name}
             </p>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted">
               {cohortToYearLabel(student.cohort?.name)} · Comisión {student.commission?.name} · {student.cohort?.name}
             </p>
           </div>

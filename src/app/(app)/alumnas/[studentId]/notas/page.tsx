@@ -34,7 +34,7 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
   return (
     <div className="space-y-4">
       {summary.currentSubjectRows.length === 0 && (
-        <p className="text-sm text-slate-500">Esta alumna no tiene materias en curso actualmente.</p>
+        <p className="text-sm text-stone-500">Esta alumna no tiene materias en curso actualmente.</p>
       )}
 
       {summary.currentSubjectRows.map((row) => (
@@ -48,7 +48,7 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
               {row.checks.map((check, i) => (
                 <li key={i} className="flex items-center gap-2">
                   <span>{check.passed ? "✓" : "✗"}</span>
-                  <span className={check.passed ? "text-slate-700" : "text-red-700"}>{check.detail}</span>
+                  <span className={check.passed ? "text-stone-700" : "text-red-700"}>{check.detail}</span>
                 </li>
               ))}
             </ul>
@@ -62,7 +62,7 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
                 </ul>
               </div>
             )}
-            <p className="text-slate-500">Promedio informativo: {row.average ?? "—"}</p>
+            <p className="text-stone-500">Promedio informativo: {row.average ?? "—"}</p>
           </CardContent>
         </Card>
       ))}
@@ -76,21 +76,21 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
             </CardHeader>
             <CardContent className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="text-xs uppercase tracking-wide text-slate-500">
+                <thead className="text-xs uppercase tracking-wide text-stone-500">
                   <tr>
                     <th className="py-2 pr-4">Evaluación</th>
                     <th className="py-2 pr-4">Nota actual</th>
                     {canWrite && <th className="py-2 pr-4">Cargar / corregir</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-stone-100">
                   {offering.subject.evaluationTemplates.map((template) => {
                     const grade = gradeByTemplate.get(`${offering.id}:${template.id}`);
                     return (
                       <tr key={template.id}>
-                        <td className="py-2 pr-4 text-slate-900">
+                        <td className="py-2 pr-4 text-stone-900">
                           {template.name}
-                          {template.retakeOfId && <span className="ml-1 text-xs text-slate-400">(recuperatorio)</span>}
+                          {template.retakeOfId && <span className="ml-1 text-xs text-stone-400">(recuperatorio)</span>}
                         </td>
                         <td className="py-2 pr-4 font-medium">{grade?.score?.toString() ?? "—"}</td>
                         {canWrite && (
@@ -107,14 +107,14 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
                                 step="0.01"
                                 defaultValue={grade?.score?.toString() ?? ""}
                                 placeholder="0-10"
-                                className="w-20 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                                className="w-20 rounded-md border border-stone-300 px-2 py-1 text-xs"
                               />
                               <input
                                 type="text"
                                 name="observations"
                                 defaultValue={grade?.observations ?? ""}
                                 placeholder="Observaciones"
-                                className="w-36 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                                className="w-36 rounded-md border border-stone-300 px-2 py-1 text-xs"
                               />
                               <Button type="submit" size="sm" variant="outline">
                                 Guardar
@@ -127,7 +127,7 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
                   })}
                   {offering.subject.evaluationTemplates.length === 0 && (
                     <tr>
-                      <td colSpan={canWrite ? 3 : 2} className="py-4 text-center text-slate-500">
+                      <td colSpan={canWrite ? 3 : 2} className="py-4 text-center text-stone-500">
                         Esta materia no tiene evaluaciones definidas.
                       </td>
                     </tr>
@@ -145,27 +145,27 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="text-xs uppercase tracking-wide text-slate-500">
+            <thead className="text-xs uppercase tracking-wide text-stone-500">
               <tr>
                 <th className="py-2 pr-4">Materia</th>
                 <th className="py-2 pr-4">Evaluación</th>
                 <th className="py-2 pr-4">Nota</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {grades.map((g) => (
                 <tr key={g.id}>
-                  <td className="py-2 pr-4 text-slate-900">{g.evaluation.subjectOffering.subject.name}</td>
-                  <td className="py-2 pr-4 text-slate-600">
+                  <td className="py-2 pr-4 text-stone-900">{g.evaluation.subjectOffering.subject.name}</td>
+                  <td className="py-2 pr-4 text-stone-600">
                     {g.evaluation.template.name}
-                    {g.evaluation.template.retakeOfId && <span className="ml-1 text-xs text-slate-400">(recuperatorio)</span>}
+                    {g.evaluation.template.retakeOfId && <span className="ml-1 text-xs text-stone-400">(recuperatorio)</span>}
                   </td>
                   <td className="py-2 pr-4 font-medium">{g.score?.toString() ?? "—"}</td>
                 </tr>
               ))}
               {grades.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="py-6 text-center text-slate-500">
+                  <td colSpan={3} className="py-6 text-center text-stone-500">
                     Esta alumna todavía no tiene evaluaciones registradas.
                   </td>
                 </tr>

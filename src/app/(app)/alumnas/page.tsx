@@ -53,8 +53,8 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Alumnas</h1>
-          <p className="text-sm text-slate-500">{total} resultado{total === 1 ? "" : "s"}</p>
+          <h1 className="font-serif text-2xl font-medium tracking-tight text-stone-900">Alumnas</h1>
+          <p className="text-sm text-stone-500">{total} resultado{total === 1 ? "" : "s"}</p>
         </div>
         {canWrite && (
           <Link href="/alumnas/nueva">
@@ -71,9 +71,9 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
               name="q"
               defaultValue={sp.q ?? ""}
               placeholder="Nombre, DNI, legajo, email..."
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm lg:col-span-2"
+              className="rounded-md border border-stone-300 px-3 py-1.5 text-sm lg:col-span-2"
             />
-            <select name="estado" defaultValue={sp.estado ?? ""} className="rounded-md border border-slate-300 px-3 py-1.5 text-sm">
+            <select name="estado" defaultValue={sp.estado ?? ""} className="rounded-md border border-stone-300 px-3 py-1.5 text-sm">
               <option value="">Estado académico (todos)</option>
               {ACADEMIC_STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>
@@ -81,7 +81,7 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
                 </option>
               ))}
             </select>
-            <select name="financiero" defaultValue={sp.financiero ?? ""} className="rounded-md border border-slate-300 px-3 py-1.5 text-sm">
+            <select name="financiero" defaultValue={sp.financiero ?? ""} className="rounded-md border border-stone-300 px-3 py-1.5 text-sm">
               <option value="">Estado financiero (todos)</option>
               {FINANCIAL_STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>
@@ -89,7 +89,7 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
                 </option>
               ))}
             </select>
-            <button type="submit" className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700">
+            <button type="submit" className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:bg-accent-hover">
               Filtrar
             </button>
           </form>
@@ -99,7 +99,7 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
               <tr>
                 <th className="px-4 py-2.5">Alumna</th>
                 <th className="px-4 py-2.5">DNI</th>
@@ -112,15 +112,15 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
                 <th className="px-4 py-2.5"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {rows.map((s) => (
-                <tr key={s.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-2.5 font-medium text-slate-900">
+                <tr key={s.id} className="hover:bg-stone-50">
+                  <td className="px-4 py-2.5 font-medium text-stone-900">
                     {s.lastName}, {s.firstName}
                   </td>
-                  <td className="px-4 py-2.5 text-slate-600">{s.dni}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{s.fileNumber}</td>
-                  <td className="px-4 py-2.5 text-slate-600">
+                  <td className="px-4 py-2.5 text-stone-600">{s.dni}</td>
+                  <td className="px-4 py-2.5 text-stone-600">{s.fileNumber}</td>
+                  <td className="px-4 py-2.5 text-stone-600">
                     {s.cohortName} — {s.commissionName}
                   </td>
                   <td className="px-4 py-2.5">
@@ -128,14 +128,14 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
                   </td>
                   <td className="px-4 py-2.5">
                     <FinancialStatusBadge status={s.financialStatus} />
-                    {s.debt > 0 && <p className="mt-0.5 text-xs text-slate-500">{formatCurrency(s.debt)}</p>}
+                    {s.debt > 0 && <p className="mt-0.5 text-xs text-stone-500">{formatCurrency(s.debt)}</p>}
                   </td>
                   <td className="px-4 py-2.5">
                     <DocumentationBadge complete={s.documentationComplete} />
                   </td>
-                  <td className="px-4 py-2.5 text-slate-600">{s.attendancePercentage.toFixed(0)}%</td>
+                  <td className="px-4 py-2.5 text-stone-600">{s.attendancePercentage.toFixed(0)}%</td>
                   <td className="px-4 py-2.5 text-right">
-                    <Link href={`/alumnas/${s.id}`} className="text-sm font-medium text-slate-900 underline-offset-2 hover:underline">
+                    <Link href={`/alumnas/${s.id}`} className="text-sm font-medium text-stone-900 underline-offset-2 hover:underline">
                       Abrir legajo
                     </Link>
                   </td>
@@ -143,7 +143,7 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
               ))}
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-10 text-center text-sm text-slate-500">
+                  <td colSpan={9} className="px-4 py-10 text-center text-sm text-stone-500">
                     No hay alumnas que coincidan con los filtros aplicados.
                   </td>
                 </tr>
@@ -159,7 +159,7 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
             <Link
               key={p}
               href={{ pathname: "/alumnas", query: { ...sp, page: String(p) } }}
-              className={`rounded-md px-3 py-1 ${p === page ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100"}`}
+              className={`rounded-md px-3 py-1 ${p === page ? "bg-accent text-accent-foreground" : "text-stone-600 hover:bg-stone-100"}`}
             >
               {p}
             </Link>

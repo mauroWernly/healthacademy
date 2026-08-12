@@ -51,10 +51,10 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
             ({summary.overallAttendance.present}/{summary.overallAttendance.totalClasses} clases)
           </p>
           {canWriteStudent && (
-            <form action={updateAcademicStatusAction} className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+            <form action={updateAcademicStatusAction} className="flex flex-wrap items-center gap-2 border-t border-stone-100 pt-3">
               <input type="hidden" name="studentId" value={studentId} />
-              <label className="text-xs uppercase tracking-wide text-slate-500">Estado académico</label>
-              <select name="academicStatus" defaultValue={student.academicStatus} className="rounded-md border border-slate-300 px-2 py-1 text-xs">
+              <label className="text-xs uppercase tracking-wide text-stone-500">Estado académico</label>
+              <select name="academicStatus" defaultValue={student.academicStatus} className="rounded-md border border-stone-300 px-2 py-1 text-xs">
                 {ACADEMIC_STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -106,9 +106,9 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
           <CardHeader>
             <CardTitle className="text-red-700">Alerta: alumna suspendida</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm text-slate-700">
+          <CardContent className="text-sm text-stone-700">
             <p>{summary.activeSuspension.reason}</p>
-            <p className="mt-1 text-slate-500">Desde {formatDate(summary.activeSuspension.startDate)}</p>
+            <p className="mt-1 text-stone-500">Desde {formatDate(summary.activeSuspension.startDate)}</p>
             {canWriteSuspension && (
               <form action={liftSuspensionAction} className="mt-3">
                 <input type="hidden" name="studentId" value={studentId} />
@@ -131,13 +131,13 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
             <form action={createSuspensionAction} className="flex flex-wrap items-end gap-2">
               <input type="hidden" name="studentId" value={studentId} />
               <div className="flex flex-col gap-1">
-                <label className="text-xs uppercase tracking-wide text-slate-500">Motivo</label>
+                <label className="text-xs uppercase tracking-wide text-stone-500">Motivo</label>
                 <input
                   type="text"
                   name="reason"
                   required
                   placeholder="Motivo de la suspensión"
-                  className="w-64 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                  className="w-64 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
                 />
               </div>
               <Button type="submit" size="sm" variant="destructive">
@@ -154,10 +154,10 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
         </CardHeader>
         <CardContent className="overflow-x-auto">
           {summary.currentSubjectRows.length === 0 ? (
-            <p className="text-sm text-slate-500">Esta alumna no tiene materias en curso actualmente.</p>
+            <p className="text-sm text-stone-500">Esta alumna no tiene materias en curso actualmente.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-slate-500">
+              <thead className="text-xs uppercase tracking-wide text-stone-500">
                 <tr>
                   <th className="py-2 pr-4">Materia</th>
                   <th className="py-2 pr-4">Promedio</th>
@@ -166,10 +166,10 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
                   <th className="py-2 pr-4">Estado</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-stone-100">
                 {summary.currentSubjectRows.map((row) => (
                   <tr key={row.subjectOfferingId}>
-                    <td className="py-2 pr-4 font-medium text-slate-900">{row.subjectName}</td>
+                    <td className="py-2 pr-4 font-medium text-stone-900">{row.subjectName}</td>
                     <td className="py-2 pr-4">{row.average ?? "—"}</td>
                     <td className="py-2 pr-4">{row.attendancePercentage.toFixed(0)}%</td>
                     <td className="py-2 pr-4">{row.assignmentsOk ? "✓" : "✗"}</td>

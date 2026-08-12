@@ -17,7 +17,7 @@ const STATUS_TONE: Record<string, BadgeTone> = {
 };
 const STATUS_OPTIONS = ["PENDIENTE", "EN_PREPARACION", "PRESENTADA", "APROBADA", "DESAPROBADA"] as const;
 
-const inputClass = "w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm";
+const inputClass = "w-full rounded-md border border-stone-300 px-3 py-1.5 text-sm";
 
 export default async function TesinaPage({ params }: { params: Promise<{ studentId: string }> }) {
   const { studentId } = await params;
@@ -33,17 +33,17 @@ export default async function TesinaPage({ params }: { params: Promise<{ student
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           {!thesis ? (
-            <p className="text-slate-500">Esta alumna todavía no inició la etapa de tesina.</p>
+            <p className="text-stone-500">Esta alumna todavía no inició la etapa de tesina.</p>
           ) : (
             <>
               <div className="flex items-center justify-between">
-                <p className="font-medium text-slate-900">{thesis.title ?? "Título a definir"}</p>
+                <p className="font-medium text-stone-900">{thesis.title ?? "Título a definir"}</p>
                 <Badge tone={STATUS_TONE[thesis.status]}>{thesis.status}</Badge>
               </div>
-              <p className="text-slate-600">Tutor: {thesis.tutor ?? "—"}</p>
-              <p className="text-slate-600">Fecha: {thesis.date ? formatDate(thesis.date) : "—"}</p>
-              <p className="text-slate-600">Nota: {thesis.grade?.toString() ?? "—"}</p>
-              {thesis.observations && <p className="text-slate-700">{thesis.observations}</p>}
+              <p className="text-stone-600">Tutor: {thesis.tutor ?? "—"}</p>
+              <p className="text-stone-600">Fecha: {thesis.date ? formatDate(thesis.date) : "—"}</p>
+              <p className="text-stone-600">Nota: {thesis.grade?.toString() ?? "—"}</p>
+              {thesis.observations && <p className="text-stone-700">{thesis.observations}</p>}
             </>
           )}
         </CardContent>
@@ -59,15 +59,15 @@ export default async function TesinaPage({ params }: { params: Promise<{ student
               <input type="hidden" name="studentId" value={studentId} />
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs uppercase tracking-wide text-slate-400">Título</label>
+                  <label className="text-xs uppercase tracking-wide text-stone-400">Título</label>
                   <input type="text" name="title" defaultValue={thesis?.title ?? ""} className={inputClass} />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs uppercase tracking-wide text-slate-400">Tutor</label>
+                  <label className="text-xs uppercase tracking-wide text-stone-400">Tutor</label>
                   <input type="text" name="tutor" defaultValue={thesis?.tutor ?? ""} className={inputClass} />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs uppercase tracking-wide text-slate-400">Fecha</label>
+                  <label className="text-xs uppercase tracking-wide text-stone-400">Fecha</label>
                   <input
                     type="date"
                     name="date"
@@ -76,7 +76,7 @@ export default async function TesinaPage({ params }: { params: Promise<{ student
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs uppercase tracking-wide text-slate-400">Estado</label>
+                  <label className="text-xs uppercase tracking-wide text-stone-400">Estado</label>
                   <select name="status" defaultValue={thesis?.status ?? "PENDIENTE"} className={inputClass}>
                     {STATUS_OPTIONS.map((s) => (
                       <option key={s} value={s}>
@@ -86,15 +86,15 @@ export default async function TesinaPage({ params }: { params: Promise<{ student
                   </select>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs uppercase tracking-wide text-slate-400">Nota</label>
+                  <label className="text-xs uppercase tracking-wide text-stone-400">Nota</label>
                   <input type="number" name="grade" min={0} max={10} step="0.01" defaultValue={thesis?.grade?.toString() ?? ""} className={inputClass} />
                 </div>
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs uppercase tracking-wide text-slate-400">Observaciones</label>
+                <label className="text-xs uppercase tracking-wide text-stone-400">Observaciones</label>
                 <textarea name="observations" rows={3} defaultValue={thesis?.observations ?? ""} className={inputClass} />
               </div>
-              <div className="flex justify-end border-t border-slate-100 pt-4">
+              <div className="flex justify-end border-t border-stone-100 pt-4">
                 <Button type="submit">Guardar</Button>
               </div>
             </form>

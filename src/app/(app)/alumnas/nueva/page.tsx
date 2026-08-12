@@ -10,13 +10,13 @@ import { createStudentAction } from "./actions";
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs uppercase tracking-wide text-slate-500">{label}</label>
+      <label className="text-xs uppercase tracking-wide text-stone-500">{label}</label>
       {children}
     </div>
   );
 }
 
-const inputClass = "rounded-md border border-slate-300 px-3 py-1.5 text-sm";
+const inputClass = "rounded-md border border-stone-300 px-3 py-1.5 text-sm";
 
 export default async function NuevaAlumnaPage() {
   const session = await auth();
@@ -33,7 +33,7 @@ export default async function NuevaAlumnaPage() {
 
   return (
     <div className="space-y-4">
-      <Link href="/alumnas" className="text-sm text-slate-500 hover:text-slate-800">
+      <Link href="/alumnas" className="text-sm text-stone-500 hover:text-stone-800">
         ← Volver a Alumnas
       </Link>
 
@@ -85,7 +85,7 @@ export default async function NuevaAlumnaPage() {
               </Field>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 border-t border-slate-100 pt-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 border-t border-stone-100 pt-4 sm:grid-cols-3">
               <Field label="Carrera">
                 <select name="careerId" defaultValue="" className={inputClass}>
                   <option value="">Sin asignar</option>
@@ -118,13 +118,13 @@ export default async function NuevaAlumnaPage() {
               </Field>
             </div>
 
-            <div className="border-t border-slate-100 pt-4">
+            <div className="border-t border-stone-100 pt-4">
               <Field label="Observaciones">
                 <textarea name="notes" rows={3} className={inputClass} />
               </Field>
             </div>
 
-            <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+            <div className="flex justify-end gap-2 border-t border-stone-100 pt-4">
               <Link href="/alumnas">
                 <Button type="button" variant="outline">
                   Cancelar

@@ -10,13 +10,13 @@ import { updateStudentDataAction } from "./actions";
 function Field({ label, value }: { label: string; value: string | null | undefined }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-wide text-slate-400">{label}</p>
-      <p className="text-sm text-slate-900">{value || "—"}</p>
+      <p className="text-xs uppercase tracking-wide text-stone-400">{label}</p>
+      <p className="text-sm text-stone-900">{value || "—"}</p>
     </div>
   );
 }
 
-const inputClass = "w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm";
+const inputClass = "w-full rounded-md border border-stone-300 px-3 py-1.5 text-sm";
 
 function EditField({
   label,
@@ -31,7 +31,7 @@ function EditField({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs uppercase tracking-wide text-slate-400">{label}</label>
+      <label className="text-xs uppercase tracking-wide text-stone-400">{label}</label>
       <input type={type} name={name} defaultValue={defaultValue ?? ""} className={inputClass} />
     </div>
   );
@@ -112,10 +112,10 @@ export default async function DatosPersonalesPage({
             <EditField label="Teléfono de emergencia" name="emergencyContactPhone" type="tel" defaultValue={student.emergencyContactPhone} />
           </div>
           <div>
-            <label className="text-xs uppercase tracking-wide text-slate-400">Observaciones</label>
+            <label className="text-xs uppercase tracking-wide text-stone-400">Observaciones</label>
             <textarea name="notes" rows={3} defaultValue={student.notes ?? ""} className={`${inputClass} mt-1`} />
           </div>
-          <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+          <div className="flex justify-end gap-2 border-t border-stone-100 pt-4">
             <Link href={`/alumnas/${studentId}/datos`}>
               <Button type="button" variant="outline">
                 Cancelar
