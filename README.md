@@ -38,6 +38,20 @@ Abrir [http://localhost:3000](http://localhost:3000).
 | Secretaría | secretaria@cosmetologia.demo | Secretaria123! |
 | Coordinación académica | coordinacion@cosmetologia.demo | Coordinador123! |
 
+### Qué puede editar cada rol dentro del legajo
+
+Cada sección del legajo de una alumna está atada a un permiso distinto — un
+rol de demo no ve el botón de una sección si no tiene el permiso correspondiente
+(salvo Administrador, que los tiene todos):
+
+| Sección | Permiso requerido | Quién lo tiene |
+|---|---|---|
+| Documentación | `document:write` | Secretaría, Admin |
+| Materias / Notas / Asistencia / Trabajos prácticos | `subject:write` / `grade:write` / `attendance:write` / `assignment:write` | Coordinación, Admin |
+| Datos personales / Estado académico / Nueva alumna | `student:write` | Secretaría, Admin |
+| Suspensión | `suspension:write` | Secretaría, Admin |
+| Pagos | `payment:write` | Secretaría, Admin |
+
 ### Resetear los datos de demo
 
 ```bash
