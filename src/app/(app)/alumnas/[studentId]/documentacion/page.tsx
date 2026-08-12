@@ -1,14 +1,21 @@
 import { getCachedStudentSummary } from "../data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
+import { auth } from "@/server/auth/config";
+import { can } from "@/server/auth/permissions";
+import { updateDocumentStatusAction } from "./actions";
 
 const STATUS_TONE = { PENDIENTE: "gray", PRESENTADO: "blue", VALIDADO: "green", RECHAZADO: "red" } as const;
+const STATUS_OPTIONS = ["PENDIENTE", "PRESENTADO", "VALIDADO", "RECHAZADO"] as const;
 
 export default async function DocumentacionPage({ params }: { params: Promise<{ studentId: string }> }) {
   const { studentId } = await params;
+  const session = await auth();
   const summary = await getCachedStudentSummary(studentId);
   const { student } = summary;
+  const canWrite = can(session!.user.permissions, "document:write");
 
   return (
     <Card>
@@ -29,6 +36,7 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
               <th className="py-2 pr-4">Cargado</th>
               <th className="py-2 pr-4">Validado</th>
               <th className="py-2 pr-4">Observaciones</th>
+              {canWrite && <th className="py-2 pr-4">Actualizar</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -41,6 +49,36 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
                 <td className="py-2 pr-4 text-slate-600">{doc.uploadedAt ? formatDate(doc.uploadedAt) : "—"}</td>
                 <td className="py-2 pr-4 text-slate-600">{doc.validatedAt ? formatDate(doc.validatedAt) : "—"}</td>
                 <td className="py-2 pr-4 text-slate-600">{doc.observations ?? "—"}</td>
+                {canWrite && (
+                  <td className="py-2 pr-4">
+                    <form action={updateDocumentStatusAction} className="flex flex-wrap items-center gap-2">
+                      <input type="hidden" name="documentId" value={doc.id} />
+                      <input type="hidden" name="studentId" value={studentId} />
+                      <select
+                        name="status"
+                        defaultValue={doc.status}
+                        required
+                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      >
+                        {STATUS_OPTIONS.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        name="observations"
+                        defaultValue={doc.observations ?? ""}
+                        placeholder="Observaciones"
+                        className="w-40 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      />
+                      <Button type="submit" size="sm" variant="outline">
+                        Guardar
+                      </Button>
+                    </form>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
