@@ -34,19 +34,19 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-stone-500">
+          <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
             <tr>
-              <th className="py-2 pr-4">Período</th>
-              <th className="py-2 pr-4">Vencimiento</th>
-              <th className="py-2 pr-4">Importe</th>
-              <th className="py-2 pr-4">Recargo</th>
-              <th className="py-2 pr-4">Total</th>
-              <th className="py-2 pr-4">Estado</th>
-              <th className="py-2 pr-4">Método / Fecha de pago</th>
-              <th className="py-2 pr-4"></th>
+              <th className="py-3 pr-6">Período</th>
+              <th className="py-3 pr-6">Vencimiento</th>
+              <th className="py-3 pr-6">Importe</th>
+              <th className="py-3 pr-6">Recargo</th>
+              <th className="py-3 pr-6">Total</th>
+              <th className="py-3 pr-6">Estado</th>
+              <th className="py-3 pr-6">Método / Fecha de pago</th>
+              <th className="py-3 pr-6"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-100">
+          <tbody className="divide-y divide-border/70">
             {tuitions.map((t) => {
               const isPaid = t.payment?.status === "CONFIRMADO";
               const computed = calculateTuitionStatus(
@@ -56,20 +56,20 @@ export default async function PagosPage({ params }: { params: Promise<{ studentI
               );
               return (
                 <tr key={t.id}>
-                  <td className="py-2 pr-4 font-medium text-stone-900">{t.period}</td>
-                  <td className="py-2 pr-4 text-stone-600">{formatDate(t.dueDate)}</td>
-                  <td className="py-2 pr-4 text-stone-600">{formatCurrency(t.amount.toNumber())}</td>
-                  <td className="py-2 pr-4 text-stone-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
-                  <td className="py-2 pr-4 font-medium">{formatCurrency(computed.total)}</td>
-                  <td className="py-2 pr-4">
+                  <td className="py-3 pr-6 font-medium text-stone-900">{t.period}</td>
+                  <td className="py-3 pr-6 text-stone-600">{formatDate(t.dueDate)}</td>
+                  <td className="py-3 pr-6 text-stone-600">{formatCurrency(t.amount.toNumber())}</td>
+                  <td className="py-3 pr-6 text-stone-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
+                  <td className="py-3 pr-6 font-medium">{formatCurrency(computed.total)}</td>
+                  <td className="py-3 pr-6">
                     <Badge tone={isPaid ? "green" : computed.isCritical ? "red" : computed.status === "CON_RECARGO" ? "yellow" : "blue"}>
                       {isPaid ? "Pagada" : computed.isCritical ? "Crítica" : computed.status}
                     </Badge>
                   </td>
-                  <td className="py-2 pr-4 text-stone-600">
+                  <td className="py-3 pr-6 text-stone-600">
                     {isPaid ? `${t.payment!.method.name} — ${formatDate(t.payment!.paidAt)}` : "—"}
                   </td>
-                  <td className="py-2 pr-4">
+                  <td className="py-3 pr-6">
                     {!isPaid && canRegisterPayment && (
                       <form action={registerPaymentAction} className="flex items-center gap-2">
                         <input type="hidden" name="tuitionId" value={t.id} />

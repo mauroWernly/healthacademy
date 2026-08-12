@@ -30,31 +30,31 @@ export default async function PracticasIndexPage() {
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
+            <thead className="border-b border-border bg-stone-50/70 text-[11px] font-semibold uppercase tracking-wider text-muted">
               <tr>
-                <th className="px-4 py-2.5">Alumna</th>
-                <th className="px-4 py-2.5">Lugar</th>
-                <th className="px-4 py-2.5">Tutor</th>
-                <th className="px-4 py-2.5">Horas</th>
-                <th className="px-4 py-2.5">Estado</th>
-                <th className="px-4 py-2.5"></th>
+                <th className="px-4 py-3.5">Alumna</th>
+                <th className="px-4 py-3.5">Lugar</th>
+                <th className="px-4 py-3.5">Tutor</th>
+                <th className="px-4 py-3.5">Horas</th>
+                <th className="px-4 py-3.5">Estado</th>
+                <th className="px-4 py-3.5"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-border/70">
               {internships.map((i) => (
                 <tr key={i.id}>
-                  <td className="px-4 py-2.5 font-medium text-stone-900">
+                  <td className="px-4 py-3.5 font-medium text-stone-900">
                     {i.student.lastName}, {i.student.firstName}
                   </td>
-                  <td className="px-4 py-2.5 text-stone-600">{i.place}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{i.tutor}</td>
-                  <td className="px-4 py-2.5 text-stone-600">
+                  <td className="px-4 py-3.5 text-stone-600">{i.place}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{i.tutor}</td>
+                  <td className="px-4 py-3.5 text-stone-600">
                     {i.completedHours}/{i.requiredHours}
                   </td>
-                  <td className="px-4 py-2.5">
+                  <td className="px-4 py-3.5">
                     <Badge tone={STATUS_TONE[i.status]}>{i.status}</Badge>
                   </td>
-                  <td className="px-4 py-2.5 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <Link href={`/alumnas/${i.studentId}/practicas`} className="text-sm font-medium text-stone-900 hover:underline">
                       Ver legajo
                     </Link>

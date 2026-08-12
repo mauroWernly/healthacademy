@@ -64,25 +64,25 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
             <p className="text-sm text-stone-500">No existen clases registradas para esta alumna todavía.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-stone-500">
+              <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                 <tr>
-                  <th className="py-2 pr-4">Materia</th>
-                  <th className="py-2 pr-4">Clases registradas</th>
-                  <th className="py-2 pr-4">Presentes</th>
-                  <th className="py-2 pr-4">Ausentes</th>
-                  <th className="py-2 pr-4">Justificadas</th>
-                  <th className="py-2 pr-4">%</th>
+                  <th className="py-3 pr-6">Materia</th>
+                  <th className="py-3 pr-6">Clases registradas</th>
+                  <th className="py-3 pr-6">Presentes</th>
+                  <th className="py-3 pr-6">Ausentes</th>
+                  <th className="py-3 pr-6">Justificadas</th>
+                  <th className="py-3 pr-6">%</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-border/70">
                 {summaryRows.map((row) => (
                   <tr key={row.id}>
-                    <td className="py-2 pr-4 font-medium text-stone-900">{row.subjectName}</td>
-                    <td className="py-2 pr-4 text-stone-600">{row.summary.totalClasses}</td>
-                    <td className="py-2 pr-4 text-stone-600">{row.summary.present}</td>
-                    <td className="py-2 pr-4 text-stone-600">{row.summary.absent}</td>
-                    <td className="py-2 pr-4 text-stone-600">{row.summary.justified}</td>
-                    <td className="py-2 pr-4">
+                    <td className="py-3 pr-6 font-medium text-stone-900">{row.subjectName}</td>
+                    <td className="py-3 pr-6 text-stone-600">{row.summary.totalClasses}</td>
+                    <td className="py-3 pr-6 text-stone-600">{row.summary.present}</td>
+                    <td className="py-3 pr-6 text-stone-600">{row.summary.absent}</td>
+                    <td className="py-3 pr-6 text-stone-600">{row.summary.justified}</td>
+                    <td className="py-3 pr-6">
                       <AttendanceBadge percentage={row.summary.percentage} minimum={config.minAttendancePercent} />
                     </td>
                   </tr>
@@ -105,26 +105,26 @@ export default async function AsistenciaPage({ params }: { params: Promise<{ stu
               </CardHeader>
               <CardContent className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="text-xs uppercase tracking-wide text-stone-500">
+                  <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                     <tr>
-                      <th className="py-2 pr-4">Clase</th>
-                      <th className="py-2 pr-4">Estado</th>
-                      <th className="py-2 pr-4">Observaciones</th>
-                      {canWrite && <th className="py-2 pr-4">Acreditar / corregir</th>}
+                      <th className="py-3 pr-6">Clase</th>
+                      <th className="py-3 pr-6">Estado</th>
+                      <th className="py-3 pr-6">Observaciones</th>
+                      {canWrite && <th className="py-3 pr-6">Acreditar / corregir</th>}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-stone-100">
+                  <tbody className="divide-y divide-border/70">
                     {offering.classSessions.map((cs) => {
                       const record = attendanceByClassSession.get(cs.id);
                       return (
                         <tr key={cs.id}>
-                          <td className="py-2 pr-4 text-stone-900">{formatDate(cs.date)}</td>
-                          <td className="py-2 pr-4">
+                          <td className="py-3 pr-6 text-stone-900">{formatDate(cs.date)}</td>
+                          <td className="py-3 pr-6">
                             {record ? <Badge tone={STATUS_TONE[record.status]}>{record.status}</Badge> : <Badge tone="gray">SIN REGISTRO</Badge>}
                           </td>
-                          <td className="py-2 pr-4 text-stone-600">{record?.observations ?? "—"}</td>
+                          <td className="py-3 pr-6 text-stone-600">{record?.observations ?? "—"}</td>
                           {canWrite && (
-                            <td className="py-2 pr-4">
+                            <td className="py-3 pr-6">
                               <form action={recordAttendanceAction} className="flex flex-wrap items-center gap-2">
                                 <input type="hidden" name="studentId" value={studentId} />
                                 <input type="hidden" name="subjectOfferingId" value={offering.id} />

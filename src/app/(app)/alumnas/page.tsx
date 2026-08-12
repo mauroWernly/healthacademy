@@ -99,42 +99,42 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
+            <thead className="border-b border-border bg-stone-50/70 text-[11px] font-semibold uppercase tracking-wider text-muted">
               <tr>
-                <th className="px-4 py-2.5">Alumna</th>
-                <th className="px-4 py-2.5">DNI</th>
-                <th className="px-4 py-2.5">Legajo</th>
-                <th className="px-4 py-2.5">Carrera / Comisión</th>
-                <th className="px-4 py-2.5">Estado académico</th>
-                <th className="px-4 py-2.5">Estado financiero</th>
-                <th className="px-4 py-2.5">Documentación</th>
-                <th className="px-4 py-2.5">Asistencia</th>
-                <th className="px-4 py-2.5"></th>
+                <th className="px-4 py-3.5">Alumna</th>
+                <th className="px-4 py-3.5">DNI</th>
+                <th className="px-4 py-3.5">Legajo</th>
+                <th className="px-4 py-3.5">Carrera / Comisión</th>
+                <th className="px-4 py-3.5">Estado académico</th>
+                <th className="px-4 py-3.5">Estado financiero</th>
+                <th className="px-4 py-3.5">Documentación</th>
+                <th className="px-4 py-3.5">Asistencia</th>
+                <th className="px-4 py-3.5"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-border/70">
               {rows.map((s) => (
-                <tr key={s.id} className="hover:bg-stone-50">
-                  <td className="px-4 py-2.5 font-medium text-stone-900">
+                <tr key={s.id} className="transition-colors hover:bg-accent/[0.04]">
+                  <td className="px-4 py-3.5 font-medium text-stone-900">
                     {s.lastName}, {s.firstName}
                   </td>
-                  <td className="px-4 py-2.5 text-stone-600">{s.dni}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{s.fileNumber}</td>
-                  <td className="px-4 py-2.5 text-stone-600">
+                  <td className="px-4 py-3.5 text-stone-600">{s.dni}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{s.fileNumber}</td>
+                  <td className="px-4 py-3.5 text-stone-600">
                     {s.cohortName} — {s.commissionName}
                   </td>
-                  <td className="px-4 py-2.5">
+                  <td className="px-4 py-3.5">
                     <AcademicStatusBadge status={s.academicStatus} />
                   </td>
-                  <td className="px-4 py-2.5">
+                  <td className="px-4 py-3.5">
                     <FinancialStatusBadge status={s.financialStatus} />
                     {s.debt > 0 && <p className="mt-0.5 text-xs text-stone-500">{formatCurrency(s.debt)}</p>}
                   </td>
-                  <td className="px-4 py-2.5">
+                  <td className="px-4 py-3.5">
                     <DocumentationBadge complete={s.documentationComplete} />
                   </td>
-                  <td className="px-4 py-2.5 text-stone-600">{s.attendancePercentage.toFixed(0)}%</td>
-                  <td className="px-4 py-2.5 text-right">
+                  <td className="px-4 py-3.5 text-stone-600">{s.attendancePercentage.toFixed(0)}%</td>
+                  <td className="px-4 py-3.5 text-right">
                     <Link href={`/alumnas/${s.id}`} className="text-sm font-medium text-stone-900 underline-offset-2 hover:underline">
                       Abrir legajo
                     </Link>

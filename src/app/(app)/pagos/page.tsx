@@ -66,41 +66,41 @@ export default async function ControlDeCuotasPage({ searchParams }: { searchPara
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
+            <thead className="border-b border-border bg-stone-50/70 text-[11px] font-semibold uppercase tracking-wider text-muted">
               <tr>
-                <th className="px-4 py-2.5">Alumna</th>
-                <th className="px-4 py-2.5">DNI</th>
-                <th className="px-4 py-2.5">Legajo</th>
-                <th className="px-4 py-2.5">Período</th>
-                <th className="px-4 py-2.5">Vencimiento</th>
-                <th className="px-4 py-2.5">Días de atraso</th>
-                <th className="px-4 py-2.5">Importe</th>
-                <th className="px-4 py-2.5">Recargo</th>
-                <th className="px-4 py-2.5">Total</th>
-                <th className="px-4 py-2.5">Estado</th>
-                <th className="px-4 py-2.5"></th>
+                <th className="px-4 py-3.5">Alumna</th>
+                <th className="px-4 py-3.5">DNI</th>
+                <th className="px-4 py-3.5">Legajo</th>
+                <th className="px-4 py-3.5">Período</th>
+                <th className="px-4 py-3.5">Vencimiento</th>
+                <th className="px-4 py-3.5">Días de atraso</th>
+                <th className="px-4 py-3.5">Importe</th>
+                <th className="px-4 py-3.5">Recargo</th>
+                <th className="px-4 py-3.5">Total</th>
+                <th className="px-4 py-3.5">Estado</th>
+                <th className="px-4 py-3.5"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-border/70">
               {rows.map(({ tuition: t, computed, daysLate }) => (
-                <tr key={t.id} className="hover:bg-stone-50">
-                  <td className="px-4 py-2.5 font-medium text-stone-900">
+                <tr key={t.id} className="transition-colors hover:bg-accent/[0.04]">
+                  <td className="px-4 py-3.5 font-medium text-stone-900">
                     {t.student.lastName}, {t.student.firstName}
                   </td>
-                  <td className="px-4 py-2.5 text-stone-600">{t.student.dni}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{t.student.fileNumber}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{t.period}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{formatDate(t.dueDate)}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{daysLate > 0 ? daysLate : "—"}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{formatCurrency(t.amount.toNumber())}</td>
-                  <td className="px-4 py-2.5 text-stone-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
-                  <td className="px-4 py-2.5 font-medium">{formatCurrency(computed.total)}</td>
-                  <td className="px-4 py-2.5">
+                  <td className="px-4 py-3.5 text-stone-600">{t.student.dni}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{t.student.fileNumber}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{t.period}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{formatDate(t.dueDate)}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{daysLate > 0 ? daysLate : "—"}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{formatCurrency(t.amount.toNumber())}</td>
+                  <td className="px-4 py-3.5 text-stone-600">{computed.surcharge > 0 ? formatCurrency(computed.surcharge) : "—"}</td>
+                  <td className="px-4 py-3.5 font-medium">{formatCurrency(computed.total)}</td>
+                  <td className="px-4 py-3.5">
                     <Badge tone={computed.isCritical ? "red" : computed.status === "CON_RECARGO" ? "yellow" : "blue"}>
                       {computed.isCritical ? "Crítica" : computed.status}
                     </Badge>
                   </td>
-                  <td className="px-4 py-2.5 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <Link href={`/alumnas/${t.studentId}/pagos`} className="text-sm font-medium text-stone-900 hover:underline">
                       Registrar pago
                     </Link>

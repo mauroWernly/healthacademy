@@ -55,28 +55,28 @@ export default async function TrabajosPracticosPage({ params }: { params: Promis
             <p className="text-sm text-stone-500">Esta alumna no tiene trabajos prácticos registrados.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-stone-500">
+              <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                 <tr>
-                  <th className="py-2 pr-4">Materia</th>
-                  <th className="py-2 pr-4">Trabajo</th>
-                  <th className="py-2 pr-4">Fecha límite</th>
-                  <th className="py-2 pr-4">Entrega</th>
-                  <th className="py-2 pr-4">Estado</th>
-                  {canWrite && <th className="py-2 pr-4">Actualizar</th>}
+                  <th className="py-3 pr-6">Materia</th>
+                  <th className="py-3 pr-6">Trabajo</th>
+                  <th className="py-3 pr-6">Fecha límite</th>
+                  <th className="py-3 pr-6">Entrega</th>
+                  <th className="py-3 pr-6">Estado</th>
+                  {canWrite && <th className="py-3 pr-6">Actualizar</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-border/70">
                 {assignments.map((a) => (
                   <tr key={a.id}>
-                    <td className="py-2 pr-4 text-stone-900">{a.template.subjectOffering.subject.name}</td>
-                    <td className="py-2 pr-4 text-stone-600">{a.template.name}</td>
-                    <td className="py-2 pr-4 text-stone-600">{a.template.dueDate ? formatDate(a.template.dueDate) : "—"}</td>
-                    <td className="py-2 pr-4 text-stone-600">{a.submittedAt ? formatDate(a.submittedAt) : "—"}</td>
-                    <td className="py-2 pr-4">
+                    <td className="py-3 pr-6 text-stone-900">{a.template.subjectOffering.subject.name}</td>
+                    <td className="py-3 pr-6 text-stone-600">{a.template.name}</td>
+                    <td className="py-3 pr-6 text-stone-600">{a.template.dueDate ? formatDate(a.template.dueDate) : "—"}</td>
+                    <td className="py-3 pr-6 text-stone-600">{a.submittedAt ? formatDate(a.submittedAt) : "—"}</td>
+                    <td className="py-3 pr-6">
                       <Badge tone={STATUS_TONE[a.status]}>{a.status}</Badge>
                     </td>
                     {canWrite && (
-                      <td className="py-2 pr-4">
+                      <td className="py-3 pr-6">
                         <form action={updateAssignmentAction} className="flex flex-wrap items-center gap-2">
                           <input type="hidden" name="studentId" value={studentId} />
                           <input type="hidden" name="assignmentId" value={a.id} />

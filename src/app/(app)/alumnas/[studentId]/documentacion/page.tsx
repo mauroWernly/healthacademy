@@ -29,28 +29,28 @@ export default async function DocumentacionPage({ params }: { params: Promise<{ 
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-stone-500">
+          <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
             <tr>
-              <th className="py-2 pr-4">Documento</th>
-              <th className="py-2 pr-4">Estado</th>
-              <th className="py-2 pr-4">Cargado</th>
-              <th className="py-2 pr-4">Validado</th>
-              <th className="py-2 pr-4">Observaciones</th>
-              {canWrite && <th className="py-2 pr-4">Actualizar</th>}
+              <th className="py-3 pr-6">Documento</th>
+              <th className="py-3 pr-6">Estado</th>
+              <th className="py-3 pr-6">Cargado</th>
+              <th className="py-3 pr-6">Validado</th>
+              <th className="py-3 pr-6">Observaciones</th>
+              {canWrite && <th className="py-3 pr-6">Actualizar</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-100">
+          <tbody className="divide-y divide-border/70">
             {student.documents.map((doc) => (
               <tr key={doc.id}>
-                <td className="py-2 pr-4 font-medium text-stone-900">{doc.documentType.name}</td>
-                <td className="py-2 pr-4">
+                <td className="py-3 pr-6 font-medium text-stone-900">{doc.documentType.name}</td>
+                <td className="py-3 pr-6">
                   <Badge tone={STATUS_TONE[doc.status]}>{doc.status}</Badge>
                 </td>
-                <td className="py-2 pr-4 text-stone-600">{doc.uploadedAt ? formatDate(doc.uploadedAt) : "—"}</td>
-                <td className="py-2 pr-4 text-stone-600">{doc.validatedAt ? formatDate(doc.validatedAt) : "—"}</td>
-                <td className="py-2 pr-4 text-stone-600">{doc.observations ?? "—"}</td>
+                <td className="py-3 pr-6 text-stone-600">{doc.uploadedAt ? formatDate(doc.uploadedAt) : "—"}</td>
+                <td className="py-3 pr-6 text-stone-600">{doc.validatedAt ? formatDate(doc.validatedAt) : "—"}</td>
+                <td className="py-3 pr-6 text-stone-600">{doc.observations ?? "—"}</td>
                 {canWrite && (
-                  <td className="py-2 pr-4">
+                  <td className="py-3 pr-6">
                     <form action={updateDocumentStatusAction} className="flex flex-wrap items-center gap-2">
                       <input type="hidden" name="documentId" value={doc.id} />
                       <input type="hidden" name="studentId" value={studentId} />

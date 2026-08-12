@@ -157,23 +157,23 @@ export default async function StudentSummaryPage({ params }: { params: Promise<{
             <p className="text-sm text-stone-500">Esta alumna no tiene materias en curso actualmente.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-stone-500">
+              <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                 <tr>
-                  <th className="py-2 pr-4">Materia</th>
-                  <th className="py-2 pr-4">Promedio</th>
-                  <th className="py-2 pr-4">Asistencia</th>
-                  <th className="py-2 pr-4">TP</th>
-                  <th className="py-2 pr-4">Estado</th>
+                  <th className="py-3 pr-6">Materia</th>
+                  <th className="py-3 pr-6">Promedio</th>
+                  <th className="py-3 pr-6">Asistencia</th>
+                  <th className="py-3 pr-6">TP</th>
+                  <th className="py-3 pr-6">Estado</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-border/70">
                 {summary.currentSubjectRows.map((row) => (
                   <tr key={row.subjectOfferingId}>
-                    <td className="py-2 pr-4 font-medium text-stone-900">{row.subjectName}</td>
-                    <td className="py-2 pr-4">{row.average ?? "—"}</td>
-                    <td className="py-2 pr-4">{row.attendancePercentage.toFixed(0)}%</td>
-                    <td className="py-2 pr-4">{row.assignmentsOk ? "✓" : "✗"}</td>
-                    <td className="py-2 pr-4">
+                    <td className="py-3 pr-6 font-medium text-stone-900">{row.subjectName}</td>
+                    <td className="py-3 pr-6">{row.average ?? "—"}</td>
+                    <td className="py-3 pr-6">{row.attendancePercentage.toFixed(0)}%</td>
+                    <td className="py-3 pr-6">{row.assignmentsOk ? "✓" : "✗"}</td>
+                    <td className="py-3 pr-6">
                       <Badge tone={row.promotes ? "green" : "yellow"}>{row.promotes ? "Promociona" : "Regular"}</Badge>
                     </td>
                   </tr>

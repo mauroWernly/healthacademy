@@ -66,7 +66,7 @@ export default async function ReportesPage() {
         </CardHeader>
         <CardContent>
           <table className="w-full text-left text-sm">
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-border/70">
               {byAcademicStatus.map((row) => (
                 <tr key={row.academicStatus}>
                   <td className="py-1.5 pr-4 text-stone-700">{row.academicStatus}</td>
@@ -84,7 +84,7 @@ export default async function ReportesPage() {
         </CardHeader>
         <CardContent>
           <table className="w-full text-left text-sm">
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-border/70">
               {paymentsByMethod.map((row) => (
                 <tr key={row.methodId}>
                   <td className="py-1.5 pr-4 text-stone-700">{methodName.get(row.methodId) ?? row.methodId}</td>

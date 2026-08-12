@@ -3,6 +3,7 @@ import { auth, signOut } from "@/server/auth/config";
 import { can } from "@/server/auth/permissions";
 import { Button } from "@/components/ui/button";
 import { SidebarNav } from "./sidebar-nav";
+import { MobileNav } from "./mobile-nav";
 
 const NAV_ITEMS: Array<{ href: string; label: string; permission?: Parameters<typeof can>[1] }> = [
   { href: "/dashboard", label: "Dashboard" },
@@ -35,17 +36,20 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-border bg-surface px-6 py-3.5">
-          <form action="/alumnas" method="GET" className="w-full max-w-sm">
-            <input
-              type="search"
-              name="q"
-              placeholder="Buscar por nombre, apellido, DNI o legajo..."
-              className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/40"
-            />
-          </form>
+        <header className="flex items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3.5 sm:px-6">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <MobileNav items={visibleNav} />
+            <form action="/alumnas" method="GET" className="w-full max-w-sm">
+              <input
+                type="search"
+                name="q"
+                placeholder="Buscar por nombre, apellido, DNI o legajo..."
+                className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/40"
+              />
+            </form>
+          </div>
           <div className="flex items-center gap-4">
-            <div className="text-right text-sm">
+            <div className="hidden text-right text-sm sm:block">
               <p className="font-medium text-foreground">{session.user.name}</p>
               <p className="text-xs text-muted">{session.user.roleName}</p>
             </div>

@@ -53,28 +53,28 @@ export default async function MateriasPage({ params }: { params: Promise<{ stude
             <p className="text-sm text-stone-500">Esta alumna todavía no tiene materias asignadas.</p>
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-stone-500">
+              <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                 <tr>
-                  <th className="py-2 pr-4">Materia</th>
-                  <th className="py-2 pr-4">Año</th>
-                  <th className="py-2 pr-4">Comisión</th>
-                  <th className="py-2 pr-4">Docente</th>
-                  <th className="py-2 pr-4">Estado</th>
-                  {canWrite && <th className="py-2 pr-4">Acciones</th>}
+                  <th className="py-3 pr-6">Materia</th>
+                  <th className="py-3 pr-6">Año</th>
+                  <th className="py-3 pr-6">Comisión</th>
+                  <th className="py-3 pr-6">Docente</th>
+                  <th className="py-3 pr-6">Estado</th>
+                  {canWrite && <th className="py-3 pr-6">Acciones</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-border/70">
                 {enrollments.map((e) => (
                   <tr key={e.id}>
-                    <td className="py-2 pr-4 font-medium text-stone-900">{e.subjectOffering.subject.name}</td>
-                    <td className="py-2 pr-4 text-stone-600">{e.subjectOffering.subject.academicYear.name}</td>
-                    <td className="py-2 pr-4 text-stone-600">{e.subjectOffering.commission.name}</td>
-                    <td className="py-2 pr-4 text-stone-600">{e.subjectOffering.teacherName}</td>
-                    <td className="py-2 pr-4">
+                    <td className="py-3 pr-6 font-medium text-stone-900">{e.subjectOffering.subject.name}</td>
+                    <td className="py-3 pr-6 text-stone-600">{e.subjectOffering.subject.academicYear.name}</td>
+                    <td className="py-3 pr-6 text-stone-600">{e.subjectOffering.commission.name}</td>
+                    <td className="py-3 pr-6 text-stone-600">{e.subjectOffering.teacherName}</td>
+                    <td className="py-3 pr-6">
                       <Badge tone={STATUS_TONE[e.status] ?? "gray"}>{e.status}</Badge>
                     </td>
                     {canWrite && (
-                      <td className="py-2 pr-4">
+                      <td className="py-3 pr-6">
                         <div className="flex flex-wrap items-center gap-2">
                           <form action={updateSubjectEnrollmentStatusAction} className="flex items-center gap-1">
                             <input type="hidden" name="studentId" value={studentId} />

@@ -76,25 +76,25 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
             </CardHeader>
             <CardContent className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="text-xs uppercase tracking-wide text-stone-500">
+                <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                   <tr>
-                    <th className="py-2 pr-4">Evaluación</th>
-                    <th className="py-2 pr-4">Nota actual</th>
-                    {canWrite && <th className="py-2 pr-4">Cargar / corregir</th>}
+                    <th className="py-3 pr-6">Evaluación</th>
+                    <th className="py-3 pr-6">Nota actual</th>
+                    {canWrite && <th className="py-3 pr-6">Cargar / corregir</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-100">
+                <tbody className="divide-y divide-border/70">
                   {offering.subject.evaluationTemplates.map((template) => {
                     const grade = gradeByTemplate.get(`${offering.id}:${template.id}`);
                     return (
                       <tr key={template.id}>
-                        <td className="py-2 pr-4 text-stone-900">
+                        <td className="py-3 pr-6 text-stone-900">
                           {template.name}
                           {template.retakeOfId && <span className="ml-1 text-xs text-stone-400">(recuperatorio)</span>}
                         </td>
-                        <td className="py-2 pr-4 font-medium">{grade?.score?.toString() ?? "—"}</td>
+                        <td className="py-3 pr-6 font-medium">{grade?.score?.toString() ?? "—"}</td>
                         {canWrite && (
-                          <td className="py-2 pr-4">
+                          <td className="py-3 pr-6">
                             <form action={saveGradeAction} className="flex flex-wrap items-center gap-2">
                               <input type="hidden" name="studentId" value={studentId} />
                               <input type="hidden" name="subjectOfferingId" value={offering.id} />
@@ -145,22 +145,22 @@ export default async function NotasPage({ params }: { params: Promise<{ studentI
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="text-xs uppercase tracking-wide text-stone-500">
+            <thead className="text-[11px] font-semibold uppercase tracking-wider text-muted">
               <tr>
-                <th className="py-2 pr-4">Materia</th>
-                <th className="py-2 pr-4">Evaluación</th>
-                <th className="py-2 pr-4">Nota</th>
+                <th className="py-3 pr-6">Materia</th>
+                <th className="py-3 pr-6">Evaluación</th>
+                <th className="py-3 pr-6">Nota</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-border/70">
               {grades.map((g) => (
                 <tr key={g.id}>
-                  <td className="py-2 pr-4 text-stone-900">{g.evaluation.subjectOffering.subject.name}</td>
-                  <td className="py-2 pr-4 text-stone-600">
+                  <td className="py-3 pr-6 text-stone-900">{g.evaluation.subjectOffering.subject.name}</td>
+                  <td className="py-3 pr-6 text-stone-600">
                     {g.evaluation.template.name}
                     {g.evaluation.template.retakeOfId && <span className="ml-1 text-xs text-stone-400">(recuperatorio)</span>}
                   </td>
-                  <td className="py-2 pr-4 font-medium">{g.score?.toString() ?? "—"}</td>
+                  <td className="py-3 pr-6 font-medium">{g.score?.toString() ?? "—"}</td>
                 </tr>
               ))}
               {grades.length === 0 && (
