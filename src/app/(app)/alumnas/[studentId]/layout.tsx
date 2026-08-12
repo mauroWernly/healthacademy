@@ -2,20 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCachedStudentSummary, cohortToYearLabel } from "./data";
 import { AcademicStatusBadge, FinancialStatusBadge, DocumentationBadge, AttendanceBadge } from "@/components/ui/badge";
-
-const TABS = [
-  { href: "", label: "Resumen" },
-  { href: "/datos", label: "Datos personales" },
-  { href: "/documentacion", label: "Documentación" },
-  { href: "/materias", label: "Materias" },
-  { href: "/notas", label: "Notas" },
-  { href: "/asistencia", label: "Asistencia" },
-  { href: "/trabajos-practicos", label: "Trabajos prácticos" },
-  { href: "/pagos", label: "Pagos" },
-  { href: "/practicas", label: "Prácticas" },
-  { href: "/tesina", label: "Tesina" },
-  { href: "/historial", label: "Historial" },
-];
+import { StudentNav } from "./student-nav";
 
 export default async function StudentLayout({
   children,
@@ -59,17 +46,7 @@ export default async function StudentLayout({
         </div>
       </div>
 
-      <nav className="flex flex-wrap gap-1 border-b border-slate-200">
-        {TABS.map((tab) => (
-          <Link
-            key={tab.href}
-            href={`/alumnas/${studentId}${tab.href}`}
-            className="rounded-t-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-          >
-            {tab.label}
-          </Link>
-        ))}
-      </nav>
+      <StudentNav studentId={studentId} />
 
       <div>{children}</div>
     </div>
