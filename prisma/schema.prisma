@@ -1,0 +1,818 @@
+// Prisma schema — Sistema Integral de Gestión Educativa
+// Ver ARCHITECTURE.md sección 3 para el diagrama entidad-relación resumido.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// INSTITUCIÓN / CONFIGURACIÓN
+// ─────────────────────────────────────────────────────────────────────────
+
+model Institution {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  config         InstitutionConfig?
+  users          User[]
+  careers        Career[]
+  cohorts        Cohort[]
+  commissions    Commission[]
+  students       Student[]
+  documentTypes  DocumentType[]
+  paymentMethods PaymentMethod[]
+  auditLogs      AuditLog[]
+
+  @@map("institutions")
+}
+
+/// Reglas de negocio configurables institucionalmente (secciones 46/47/70).
+/// Nunca hardcodear estos valores en el código de dominio.
+model InstitutionConfig {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String      @unique
+
+  // Académico
+  minAttendancePercent        Decimal @default(80) @db.Decimal(5, 2)
+  minPartialGradeForPromotion Decimal @default(8) @db.Decimal(4, 2)
+  passingGrade                Decimal @default(4) @db.Decimal(4, 2)
+
+  // Financiero
+  tuitionAmount            Decimal @default(50000) @db.Decimal(12, 2)
+  tuitionDueDay            Int     @default(10)
+  surchargeAmount          Decimal @default(5000) @db.Decimal(12, 2)
+  criticalDay              Int     @default(20)
+  autoSuspendOnCriticalDay Boolean @default(false)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("institution_configs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// USUARIOS / ROLES / PERMISOS
+// ─────────────────────────────────────────────────────────────────────────
+
+model Role {
+  id          String  @id @default(cuid())
+  key         String  @unique // "admin" | "secretaria" | "coordinador" | "docente"
+  name        String
+  description String?
+
+  users       User[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String  @id @default(cuid())
+  key         String  @unique // "payment:write", "student:read", "*" ...
+  description String?
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId       String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  permissionId String
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+
+  name               String
+  email              String  @unique
+  passwordHash       String
+  role               Role    @relation(fields: [roleId], references: [id])
+  roleId             String
+  active             Boolean @default(true)
+  mustChangePassword Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auditLogs          AuditLog[]
+  paymentsRecorded   Payment[]    @relation("PaymentRecordedBy")
+  paymentsVoided     Payment[]    @relation("PaymentVoidedBy")
+  documentsValidated Document[]   @relation("DocumentValidatedBy")
+  suspensionsCreated Suspension[] @relation("SuspensionCreatedBy")
+  suspensionsLifted  Suspension[] @relation("SuspensionLiftedBy")
+  gradesRecorded     Grade[]      @relation("GradeRecordedBy")
+  attendanceRecorded Attendance[] @relation("AttendanceRecordedBy")
+
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// ESTRUCTURA ACADÉMICA: CARRERA / PLAN / AÑO / CUATRIMESTRE / MATERIA
+// ─────────────────────────────────────────────────────────────────────────
+
+model Career {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+
+  name           String // "Tecnicatura Superior en Cosmetología Facial y Corporal"
+  durationMonths Int // 30 (2 años y medio)
+  active         Boolean @default(true)
+
+  studyPlans StudyPlan[]
+  cohorts    Cohort[]
+  students   Student[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("careers")
+}
+
+model StudyPlan {
+  id       String @id @default(cuid())
+  career   Career @relation(fields: [careerId], references: [id])
+  careerId String
+
+  name    String // "Plan 2026"
+  version String  @default("1")
+  active  Boolean @default(true)
+
+  academicYears AcademicYear[]
+  enrollments   Enrollment[]
+
+  createdAt DateTime @default(now())
+
+  @@map("study_plans")
+}
+
+model AcademicYear {
+  id          String    @id @default(cuid())
+  studyPlan   StudyPlan @relation(fields: [studyPlanId], references: [id])
+  studyPlanId String
+
+  order        Int // 1, 2, 3 (3 = etapa final)
+  name         String // "1° Año", "2° Año", "Etapa Final"
+  isFinalStage Boolean @default(false)
+
+  semesters Semester[]
+  subjects  Subject[]
+
+  @@unique([studyPlanId, order])
+  @@map("academic_years")
+}
+
+model Semester {
+  id             String       @id @default(cuid())
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
+
+  order Int // 1 | 2
+  name  String // "1° Cuatrimestre"
+
+  subjects Subject[]
+
+  @@unique([academicYearId, order])
+  @@map("semesters")
+}
+
+enum SubjectType {
+  ANNUAL
+  SEMESTER
+  WORKSHOP
+  PRACTICE
+  THESIS
+}
+
+enum SubjectStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Subject {
+  id             String       @id @default(cuid())
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
+  semester       Semester?    @relation(fields: [semesterId], references: [id])
+  semesterId     String?
+
+  name   String
+  code   String        @unique
+  type   SubjectType
+  status SubjectStatus @default(ACTIVE)
+
+  minAttendancePercent Decimal? @db.Decimal(5, 2) // override institucional si es null usa InstitutionConfig
+  academicRegime       String? // texto libre: régimen académico
+  evaluationRegime     String? // texto libre: régimen de evaluación (descriptivo)
+
+  evaluationTemplates EvaluationTemplate[]
+  offerings           SubjectOffering[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subjects")
+}
+
+/// Define QUÉ evaluaciones tiene una materia (no asume "dos parciales" fijo).
+model EvaluationTemplate {
+  id        String  @id @default(cuid())
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+
+  name                 String // "Parcial 1", "Trabajo Práctico Integrador", "Defensa"
+  type                 EvaluationKind
+  order                Int            @default(0)
+  isRequired           Boolean        @default(true)
+  affectsPromotion     Boolean        @default(true)
+  allowsRetake         Boolean        @default(false)
+  minGradeForPromotion Decimal?       @db.Decimal(4, 2) // override; si null usa InstitutionConfig.minPartialGradeForPromotion
+
+  /// Si esta plantilla es el recuperatorio de otra (mantiene ambas notas separadas).
+  retakeOf   EvaluationTemplate?  @relation("Retake", fields: [retakeOfId], references: [id])
+  retakeOfId String?
+  retakes    EvaluationTemplate[] @relation("Retake")
+
+  evaluations Evaluation[]
+
+  @@map("evaluation_templates")
+}
+
+enum EvaluationKind {
+  PARTIAL
+  RETAKE
+  FINAL
+  PRACTICAL_WORK
+  PRACTICAL_EVALUATION
+  PRESENTATION
+  DEFENSE
+  OTHER
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// COHORTE / COMISIÓN / DICTADO DE MATERIA
+// ─────────────────────────────────────────────────────────────────────────
+
+model Cohort {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+  career        Career      @relation(fields: [careerId], references: [id])
+  careerId      String
+
+  name      String // "Cohorte 2026"
+  startYear Int
+
+  students    Student[]
+  commissions Commission[]
+
+  @@map("cohorts")
+}
+
+model Commission {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+  cohort        Cohort      @relation(fields: [cohortId], references: [id])
+  cohortId      String
+
+  name  String // "2° A"
+  shift String? // "Mañana" | "Tarde"
+
+  students         Student[]
+  subjectOfferings SubjectOffering[]
+
+  @@map("commissions")
+}
+
+/// "Materia dictada en una comisión": docente, sesiones de clase, evaluaciones concretas.
+model SubjectOffering {
+  id           String     @id @default(cuid())
+  subject      Subject    @relation(fields: [subjectId], references: [id])
+  subjectId    String
+  commission   Commission @relation(fields: [commissionId], references: [id])
+  commissionId String
+
+  teacherName  String
+  calendarYear Int // 2026
+
+  subjectEnrollments  SubjectEnrollment[]
+  classSessions       ClassSession[]
+  evaluations         Evaluation[]
+  assignmentTemplates AssignmentTemplate[]
+
+  @@unique([subjectId, commissionId, calendarYear])
+  @@map("subject_offerings")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// ALUMNA
+// ─────────────────────────────────────────────────────────────────────────
+
+enum AcademicStatus {
+  PREINSCRIPTA
+  INSCRIPTA
+  ACTIVA
+  REGULAR
+  CONDICIONAL
+  EGRESADA
+  SUSPENDIDA
+  BAJA
+  INACTIVA
+}
+
+model Student {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+
+  fileNumber String @unique // "legajo", ej "000123"
+
+  firstName String
+  lastName  String
+  dni       String @unique
+
+  birthDate             DateTime?
+  birthPlace            String?
+  nationality           String?
+  address               String?
+  city                  String?
+  province              String?
+  phone                 String?
+  email                 String?
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  notes                 String?
+
+  photoStorageKey String?
+
+  career       Career?     @relation(fields: [careerId], references: [id])
+  careerId     String?
+  cohort       Cohort?     @relation(fields: [cohortId], references: [id])
+  cohortId     String?
+  commission   Commission? @relation(fields: [commissionId], references: [id])
+  commissionId String?
+
+  academicStatus AcademicStatus @default(PREINSCRIPTA)
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  enrollments        Enrollment[]
+  subjectEnrollments SubjectEnrollment[]
+  documents          Document[]
+  files              StudentFile[]
+  attendances        Attendance[]
+  grades             Grade[]
+  assignments        Assignment[]
+  tuitions           Tuition[]
+  suspensions        Suspension[]
+  internships        Internship[]
+  thesis             Thesis?
+
+  @@index([lastName, firstName])
+  @@map("students")
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  student     Student   @relation(fields: [studentId], references: [id])
+  studentId   String
+  studyPlan   StudyPlan @relation(fields: [studyPlanId], references: [id])
+  studyPlanId String
+
+  enrolledAt DateTime @default(now())
+  status     String   @default("ACTIVE") // ACTIVE | WITHDRAWN | GRADUATED
+
+  @@unique([studentId, studyPlanId])
+  @@map("enrollments")
+}
+
+enum SubjectEnrollmentStatus {
+  CURSANDO
+  APROBADA
+  PROMOCIONADA
+  DESAPROBADA
+  LIBRE
+}
+
+model SubjectEnrollment {
+  id                String          @id @default(cuid())
+  student           Student         @relation(fields: [studentId], references: [id])
+  studentId         String
+  subjectOffering   SubjectOffering @relation(fields: [subjectOfferingId], references: [id])
+  subjectOfferingId String
+
+  status     SubjectEnrollmentStatus @default(CURSANDO)
+  enrolledAt DateTime                @default(now())
+  closedAt   DateTime?
+
+  @@unique([studentId, subjectOfferingId])
+  @@map("subject_enrollments")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// DOCUMENTACIÓN / ARCHIVOS
+// ─────────────────────────────────────────────────────────────────────────
+
+/// Catálogo configurable de tipos de documento requeridos (sección 12).
+model DocumentType {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+
+  key      String // "dni", "foto_carnet", "partida_nacimiento", ...
+  name     String
+  required Boolean @default(true)
+  active   Boolean @default(true)
+
+  documents Document[]
+
+  @@unique([institutionId, key])
+  @@map("document_types")
+}
+
+enum DocumentStatus {
+  PENDIENTE
+  PRESENTADO
+  VALIDADO
+  RECHAZADO
+}
+
+model Document {
+  id             String       @id @default(cuid())
+  student        Student      @relation(fields: [studentId], references: [id])
+  studentId      String
+  documentType   DocumentType @relation(fields: [documentTypeId], references: [id])
+  documentTypeId String
+
+  status          DocumentStatus @default(PENDIENTE)
+  storageKey      String?
+  storageProvider String? // "local" | "s3"
+
+  uploadedAt    DateTime?
+  validatedAt   DateTime?
+  validatedBy   User?     @relation("DocumentValidatedBy", fields: [validatedById], references: [id])
+  validatedById String?
+
+  observations String?
+  deletedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, documentTypeId])
+  @@map("documents")
+}
+
+/// Archivos genéricos del legajo que no son "documentación de inscripción" (ej. foto de perfil, adjuntos varios).
+model StudentFile {
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  label           String
+  storageKey      String
+  storageProvider String @default("local")
+
+  createdAt DateTime @default(now())
+
+  @@map("student_files")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// CLASES / ASISTENCIA
+// ─────────────────────────────────────────────────────────────────────────
+
+model ClassSession {
+  id                String          @id @default(cuid())
+  subjectOffering   SubjectOffering @relation(fields: [subjectOfferingId], references: [id])
+  subjectOfferingId String
+
+  date  DateTime
+  topic String?
+
+  attendances Attendance[]
+
+  @@unique([subjectOfferingId, date])
+  @@map("class_sessions")
+}
+
+enum AttendanceStatus {
+  PRESENTE
+  AUSENTE
+  AUSENTE_JUSTIFICADA
+}
+
+model Attendance {
+  id             String       @id @default(cuid())
+  student        Student      @relation(fields: [studentId], references: [id])
+  studentId      String
+  classSession   ClassSession @relation(fields: [classSessionId], references: [id])
+  classSessionId String
+
+  status       AttendanceStatus
+  observations String?
+
+  recordedBy   User?   @relation("AttendanceRecordedBy", fields: [recordedById], references: [id])
+  recordedById String?
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([studentId, classSessionId])
+  @@map("attendances")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// EVALUACIONES / NOTAS
+// ─────────────────────────────────────────────────────────────────────────
+
+/// Instancia concreta de una evaluación para un dictado (fecha real, comisión).
+model Evaluation {
+  id                String             @id @default(cuid())
+  subjectOffering   SubjectOffering    @relation(fields: [subjectOfferingId], references: [id])
+  subjectOfferingId String
+  template          EvaluationTemplate @relation(fields: [templateId], references: [id])
+  templateId        String
+
+  date DateTime?
+
+  grades Grade[]
+
+  @@map("evaluations")
+}
+
+model Grade {
+  id           String     @id @default(cuid())
+  student      Student    @relation(fields: [studentId], references: [id])
+  studentId    String
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+  evaluationId String
+
+  score        Decimal?  @db.Decimal(4, 2) // null = aún no rendida/corregida
+  gradedAt     DateTime?
+  observations String?
+
+  recordedBy   User?   @relation("GradeRecordedBy", fields: [recordedById], references: [id])
+  recordedById String?
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([studentId, evaluationId])
+  @@map("grades")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// TRABAJOS PRÁCTICOS
+// ─────────────────────────────────────────────────────────────────────────
+
+model AssignmentTemplate {
+  id                String          @id @default(cuid())
+  subjectOffering   SubjectOffering @relation(fields: [subjectOfferingId], references: [id])
+  subjectOfferingId String
+
+  name       String
+  dueDate    DateTime?
+  isRequired Boolean   @default(true)
+
+  assignments Assignment[]
+
+  @@map("assignment_templates")
+}
+
+enum AssignmentStatus {
+  PENDIENTE
+  ENTREGADO
+  APROBADO
+  DESAPROBADO
+}
+
+model Assignment {
+  id         String             @id @default(cuid())
+  student    Student            @relation(fields: [studentId], references: [id])
+  studentId  String
+  template   AssignmentTemplate @relation(fields: [templateId], references: [id])
+  templateId String
+
+  status       AssignmentStatus @default(PENDIENTE)
+  submittedAt  DateTime?
+  score        Decimal?         @db.Decimal(4, 2)
+  observations String?
+
+  @@unique([studentId, templateId])
+  @@map("assignments")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// FINANCIERO: CUOTAS / PAGOS / RECARGOS
+// ─────────────────────────────────────────────────────────────────────────
+
+model PaymentMethod {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+
+  key    String // "transferencia" | "efectivo" | "mercadopago" | "tarjeta" | "debito_automatico"
+  name   String
+  active Boolean @default(true)
+
+  payments Payment[]
+
+  @@unique([institutionId, key])
+  @@map("payment_methods")
+}
+
+enum TuitionStatus {
+  PENDIENTE
+  PAGADA
+  VENCIDA
+  CON_RECARGO
+}
+
+/// Cada cuota es una obligación independiente. Nunca se fusiona con otra ni admite pago parcial.
+model Tuition {
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  period  String // "2026-08" (mes calendario)
+  amount  Decimal  @db.Decimal(12, 2)
+  dueDate DateTime
+
+  status TuitionStatus @default(PENDIENTE)
+
+  payment Payment?
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([studentId, period])
+  @@map("tuitions")
+}
+
+enum PaymentStatus {
+  CONFIRMADO
+  ANULADO
+}
+
+model Payment {
+  id        String  @id @default(cuid())
+  tuition   Tuition @relation(fields: [tuitionId], references: [id])
+  tuitionId String  @unique
+
+  method   PaymentMethod @relation(fields: [methodId], references: [id])
+  methodId String
+
+  amountPaid       Decimal  @db.Decimal(12, 2) // cuota + recargo si corresponde, importe total exacto
+  surchargeApplied Decimal  @default(0) @db.Decimal(12, 2)
+  paidAt           DateTime
+
+  status PaymentStatus @default(CONFIRMADO)
+
+  recordedBy   User   @relation("PaymentRecordedBy", fields: [recordedById], references: [id])
+  recordedById String
+
+  voidReason String?
+  voidedAt   DateTime?
+  voidedBy   User?     @relation("PaymentVoidedBy", fields: [voidedById], references: [id])
+  voidedById String?
+
+  observations String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// SUSPENSIONES
+// ─────────────────────────────────────────────────────────────────────────
+
+model Suspension {
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  reason    String
+  startDate DateTime @default(now())
+
+  createdBy   User   @relation("SuspensionCreatedBy", fields: [createdById], references: [id])
+  createdById String
+
+  liftedAt   DateTime?
+  liftedBy   User?     @relation("SuspensionLiftedBy", fields: [liftedById], references: [id])
+  liftedById String?
+
+  observations String?
+
+  @@map("suspensions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// PRÁCTICAS / TESINA
+// ─────────────────────────────────────────────────────────────────────────
+
+enum InternshipStatus {
+  PENDIENTE
+  EN_CURSO
+  COMPLETA
+  APROBADA
+  NO_APROBADA
+}
+
+model Internship {
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  place          String
+  tutor          String
+  startDate      DateTime?
+  endDate        DateTime?
+  requiredHours  Int
+  completedHours Int              @default(0)
+  evaluation     String?
+  status         InternshipStatus @default(PENDIENTE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("internships")
+}
+
+enum ThesisStatus {
+  PENDIENTE
+  EN_PREPARACION
+  PRESENTADA
+  APROBADA
+  DESAPROBADA
+}
+
+model Thesis {
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @unique
+
+  title        String?
+  tutor        String?
+  date         DateTime?
+  status       ThesisStatus @default(PENDIENTE)
+  grade        Decimal?     @db.Decimal(4, 2)
+  observations String?
+
+  storageKey      String?
+  storageProvider String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("theses")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// AUDITORÍA
+// ─────────────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id            String      @id @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  action   String // "CREATE" | "UPDATE" | "DELETE" | "VOID" | ...
+  entity   String // "Payment" | "Grade" | "Attendance" | "Document" | "Suspension" | "Student" | ...
+  entityId String
+
+  before Json?
+  after  Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([institutionId, createdAt])
+  @@map("audit_logs")
+}
