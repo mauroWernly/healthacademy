@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
 import { auth } from "@/server/auth/config";
 import { requirePermission } from "@/server/auth/permissions";
@@ -71,4 +72,5 @@ export async function updateStudentDataAction(formData: FormData) {
   revalidatePath(`/alumnas/${studentId}/datos`);
   revalidatePath(`/alumnas/${studentId}`);
   revalidatePath("/alumnas");
+  redirect(`/alumnas/${studentId}/datos`);
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getCachedStudentSummary } from "../data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,17 +37,32 @@ function EditField({
   );
 }
 
-export default async function DatosPersonalesPage({ params }: { params: Promise<{ studentId: string }> }) {
+export default async function DatosPersonalesPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ studentId: string }>;
+  searchParams: Promise<{ editar?: string }>;
+}) {
   const { studentId } = await params;
+  const { editar } = await searchParams;
   const session = await auth();
   const { student } = await getCachedStudentSummary(studentId);
   const canWrite = can(session!.user.permissions, "student:write");
+  const isEditing = canWrite && editar === "1";
 
-  if (!canWrite) {
+  if (!isEditing) {
     return (
       <Card>
-        <CardHeader>
+        <CardHeader className="flex items-center justify-between">
           <CardTitle>Datos personales</CardTitle>
+          {canWrite && (
+            <Link href={`/alumnas/${studentId}/datos?editar=1`}>
+              <Button size="sm" variant="outline">
+                Editar
+              </Button>
+            </Link>
+          )}
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Field label="Nombre" value={student.firstName} />
@@ -75,7 +91,7 @@ export default async function DatosPersonalesPage({ params }: { params: Promise<
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Datos personales</CardTitle>
+        <CardTitle>Editar datos personales</CardTitle>
       </CardHeader>
       <CardContent>
         <form action={updateStudentDataAction} className="space-y-6">
@@ -99,7 +115,12 @@ export default async function DatosPersonalesPage({ params }: { params: Promise<
             <label className="text-xs uppercase tracking-wide text-slate-400">Observaciones</label>
             <textarea name="notes" rows={3} defaultValue={student.notes ?? ""} className={`${inputClass} mt-1`} />
           </div>
-          <div className="flex justify-end border-t border-slate-100 pt-4">
+          <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+            <Link href={`/alumnas/${studentId}/datos`}>
+              <Button type="button" variant="outline">
+                Cancelar
+              </Button>
+            </Link>
             <Button type="submit">Guardar cambios</Button>
           </div>
         </form>
