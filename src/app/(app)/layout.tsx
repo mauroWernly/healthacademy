@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { auth, signOut } from "@/server/auth/config";
 import { can } from "@/server/auth/permissions";
 import { Button } from "@/components/ui/button";
+import { SidebarNav } from "./sidebar-nav";
 
 const NAV_ITEMS: Array<{ href: string; label: string; permission?: Parameters<typeof can>[1] }> = [
   { href: "/dashboard", label: "Dashboard" },
@@ -31,17 +31,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <p className="text-sm font-semibold text-slate-900">Instituto Superior de</p>
           <p className="text-sm font-semibold text-slate-900">Cosmetología Integral</p>
         </div>
-        <nav className="flex-1 space-y-0.5 px-3 py-4">
-          {visibleNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <SidebarNav items={visibleNav} />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
