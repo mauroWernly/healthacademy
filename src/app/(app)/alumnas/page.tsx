@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { auth } from "@/server/auth/config";
+import { can } from "@/server/auth/permissions";
 import { listStudents } from "@/server/services/students.service";
 import { Card, CardContent } from "@/components/ui/card";
 import { AcademicStatusBadge, FinancialStatusBadge, DocumentationBadge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 
 const ACADEMIC_STATUS_OPTIONS = [
@@ -45,6 +47,7 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
   });
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const canWrite = can(session!.user.permissions, "student:write");
 
   return (
     <div className="space-y-4">
@@ -53,6 +56,11 @@ export default async function AlumnasPage({ searchParams }: { searchParams: Prom
           <h1 className="text-xl font-semibold text-slate-900">Alumnas</h1>
           <p className="text-sm text-slate-500">{total} resultado{total === 1 ? "" : "s"}</p>
         </div>
+        {canWrite && (
+          <Link href="/alumnas/nueva">
+            <Button>+ Nueva alumna</Button>
+          </Link>
+        )}
       </div>
 
       <Card>
